@@ -361,6 +361,7 @@
 				189EBF52158C508A00DF177C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -12,3 +12,40 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+
+
+#define IS_PAD() ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? NO : YES )
+#define FULLSCREEN IS_PAD()? CGRectMake(0, 0, 1024, 768): CGRectMake(0, 0, 480, 320)
+
+#ifdef DEBUG
+#   define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#   define DLog(...)
+#endif
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#ifdef DEBUG
+#   define ULog(fmt, ...)  { UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%s\n [Line %d] ", __PRETTY_FUNCTION__, __LINE__] message:[NSString stringWithFormat:fmt, ##__VA_ARGS__]  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil]; [alert show]; }
+#else
+#   define ULog(...)
+#endif
+
+
+
+
+/*!
+ * @function Singleton GCD Macro
+ */
+#ifndef SINGLETON_GCD
+#define SINGLETON_GCD(classname)                        \
+\
++ (classname *)shared##classname {                      \
+\
+static dispatch_once_t pred;                        \
+__strong static classname * shared##classname = nil;\
+dispatch_once( &pred, ^{                            \
+shared##classname = [[self alloc] init]; });    \
+return shared##classname;                           \
+}                                                           
+#endif
+

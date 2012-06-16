@@ -1,3 +1,6 @@
 [submodule "vendor/gpuimage"]
 	path = vendor/gpuimage
 	url = https://github.com/BradLarson/GPUImage.git
+[submodule "vendor/mkstorekit"]
+	path = vendor/mkstorekit
+	url = git://github.com/MugunthKumar/MKStoreKit.git
