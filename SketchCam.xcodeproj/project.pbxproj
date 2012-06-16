@@ -93,13 +93,6 @@
 		189EBF24158C508900DF177C = {
 			isa = PBXGroup;
 			children = (
-				189EBF6D158C580300DF177C /* AssetsLibrary.framework */,
-				189EBF68158C569500DF177C /* QuartzCore.framework */,
-				189EBF66158C568D00DF177C /* AVFoundation.framework */,
-				189EBF64158C567E00DF177C /* OpenGLES.framework */,
-				189EBF62158C567600DF177C /* CoreVideo.framework */,
-				189EBF60158C566E00DF177C /* CoreMedia.framework */,
-				189EBF53158C564900DF177C /* GPUImage.xcodeproj */,
 				189EBF39158C508A00DF177C /* SketchCam */,
 				189EBF32158C508A00DF177C /* Frameworks */,
 				189EBF30158C508A00DF177C /* Products */,
@@ -117,6 +110,13 @@
 		189EBF32158C508A00DF177C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				189EBF53158C564900DF177C /* GPUImage.xcodeproj */,
+				189EBF6D158C580300DF177C /* AssetsLibrary.framework */,
+				189EBF68158C569500DF177C /* QuartzCore.framework */,
+				189EBF66158C568D00DF177C /* AVFoundation.framework */,
+				189EBF64158C567E00DF177C /* OpenGLES.framework */,
+				189EBF62158C567600DF177C /* CoreVideo.framework */,
+				189EBF60158C566E00DF177C /* CoreMedia.framework */,
 				189EBF33158C508A00DF177C /* UIKit.framework */,
 				189EBF35158C508A00DF177C /* Foundation.framework */,
 				189EBF37158C508A00DF177C /* CoreGraphics.framework */,
