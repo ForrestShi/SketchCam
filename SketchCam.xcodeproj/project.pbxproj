@@ -14,25 +14,59 @@
 		189EBF40158C508A00DF177C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
 		189EBF44158C508A00DF177C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF43158C508A00DF177C /* AppDelegate.m */; };
 		189EBF47158C508A00DF177C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* ViewController.m */; };
-		189EBF4A158C508A00DF177C /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 189EBF48158C508A00DF177C /* ViewController_iPhone.xib */; };
-		189EBF4D158C508A00DF177C /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 189EBF4B158C508A00DF177C /* ViewController_iPad.xib */; };
+		189EBF61158C566E00DF177C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF60158C566E00DF177C /* CoreMedia.framework */; };
+		189EBF63158C567600DF177C /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF62158C567600DF177C /* CoreVideo.framework */; };
+		189EBF65158C567E00DF177C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF64158C567E00DF177C /* OpenGLES.framework */; };
+		189EBF67158C568D00DF177C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF66158C568D00DF177C /* AVFoundation.framework */; };
+		189EBF69158C569600DF177C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF68158C569500DF177C /* QuartzCore.framework */; };
+		189EBF6A158C56A100DF177C /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF5D158C564A00DF177C /* libGPUImage.a */; };
+		189EBF6E158C580300DF177C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF6D158C580300DF177C /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		189EBF5C158C564A00DF177C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 189EBF53158C564900DF177C /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCF1A33414DDB1EC00852800;
+			remoteInfo = GPUImage;
+		};
+		189EBF5E158C564A00DF177C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 189EBF53158C564900DF177C /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCF1A34414DDB1EC00852800;
+			remoteInfo = GPUImageTests;
+		};
+		189EBF6B158C56B200DF177C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 189EBF53158C564900DF177C /* GPUImage.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BCF1A33314DDB1EC00852800;
+			remoteInfo = GPUImage;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		189EBF2F158C508A00DF177C /* SketchCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SketchCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189EBF33158C508A00DF177C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		189EBF35158C508A00DF177C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		189EBF37158C508A00DF177C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		189EBF3B158C508A00DF177C /* SketchCam-Info.plist */ = {isa = PBXFileReference; path = "SketchCam-Info.plist"; sourceTree = "<group>"; };
+		189EBF3B158C508A00DF177C /* SketchCam-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SketchCam-Info.plist"; sourceTree = "<group>"; };
 		189EBF3D158C508A00DF177C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		189EBF3F158C508A00DF177C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		189EBF41158C508A00DF177C /* SketchCam-Prefix.pch */ = {isa = PBXFileReference; path = "SketchCam-Prefix.pch"; sourceTree = "<group>"; };
-		189EBF42158C508A00DF177C /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		189EBF41158C508A00DF177C /* SketchCam-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SketchCam-Prefix.pch"; sourceTree = "<group>"; };
+		189EBF42158C508A00DF177C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		189EBF43158C508A00DF177C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		189EBF45158C508A00DF177C /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		189EBF45158C508A00DF177C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		189EBF46158C508A00DF177C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		189EBF49158C508A00DF177C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
-		189EBF4C158C508A00DF177C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		189EBF53158C564900DF177C /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = vendor/gpuimage/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
+		189EBF60158C566E00DF177C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		189EBF62158C567600DF177C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		189EBF64158C567E00DF177C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		189EBF66158C568D00DF177C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		189EBF68158C569500DF177C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		189EBF6D158C580300DF177C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +74,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				189EBF6E158C580300DF177C /* AssetsLibrary.framework in Frameworks */,
+				189EBF6A158C56A100DF177C /* libGPUImage.a in Frameworks */,
+				189EBF69158C569600DF177C /* QuartzCore.framework in Frameworks */,
+				189EBF67158C568D00DF177C /* AVFoundation.framework in Frameworks */,
+				189EBF65158C567E00DF177C /* OpenGLES.framework in Frameworks */,
+				189EBF63158C567600DF177C /* CoreVideo.framework in Frameworks */,
+				189EBF61158C566E00DF177C /* CoreMedia.framework in Frameworks */,
 				189EBF34158C508A00DF177C /* UIKit.framework in Frameworks */,
 				189EBF36158C508A00DF177C /* Foundation.framework in Frameworks */,
 				189EBF38158C508A00DF177C /* CoreGraphics.framework in Frameworks */,
@@ -52,6 +93,13 @@
 		189EBF24158C508900DF177C = {
 			isa = PBXGroup;
 			children = (
+				189EBF6D158C580300DF177C /* AssetsLibrary.framework */,
+				189EBF68158C569500DF177C /* QuartzCore.framework */,
+				189EBF66158C568D00DF177C /* AVFoundation.framework */,
+				189EBF64158C567E00DF177C /* OpenGLES.framework */,
+				189EBF62158C567600DF177C /* CoreVideo.framework */,
+				189EBF60158C566E00DF177C /* CoreMedia.framework */,
+				189EBF53158C564900DF177C /* GPUImage.xcodeproj */,
 				189EBF39158C508A00DF177C /* SketchCam */,
 				189EBF32158C508A00DF177C /* Frameworks */,
 				189EBF30158C508A00DF177C /* Products */,
@@ -83,8 +131,6 @@
 				189EBF43158C508A00DF177C /* AppDelegate.m */,
 				189EBF45158C508A00DF177C /* ViewController.h */,
 				189EBF46158C508A00DF177C /* ViewController.m */,
-				189EBF48158C508A00DF177C /* ViewController_iPhone.xib */,
-				189EBF4B158C508A00DF177C /* ViewController_iPad.xib */,
 				189EBF3A158C508A00DF177C /* Supporting Files */,
 			);
 			path = SketchCam;
@@ -101,6 +147,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		189EBF54158C564900DF177C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				189EBF5D158C564A00DF177C /* libGPUImage.a */,
+				189EBF5F158C564A00DF177C /* GPUImageTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -115,6 +170,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				189EBF6C158C56B200DF177C /* PBXTargetDependency */,
 			);
 			name = SketchCam;
 			productName = SketchCam;
@@ -139,6 +195,12 @@
 			mainGroup = 189EBF24158C508900DF177C;
 			productRefGroup = 189EBF30158C508A00DF177C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 189EBF54158C564900DF177C /* Products */;
+					ProjectRef = 189EBF53158C564900DF177C /* GPUImage.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				189EBF2E158C508A00DF177C /* SketchCam */,
@@ -146,14 +208,29 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		189EBF5D158C564A00DF177C /* libGPUImage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGPUImage.a;
+			remoteRef = 189EBF5C158C564A00DF177C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		189EBF5F158C564A00DF177C /* GPUImageTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GPUImageTests.octest;
+			remoteRef = 189EBF5E158C564A00DF177C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		189EBF2D158C508A00DF177C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				189EBF3E158C508A00DF177C /* InfoPlist.strings in Resources */,
-				189EBF4A158C508A00DF177C /* ViewController_iPhone.xib in Resources */,
-				189EBF4D158C508A00DF177C /* ViewController_iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +249,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		189EBF6C158C56B200DF177C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GPUImage;
+			targetProxy = 189EBF6B158C56B200DF177C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		189EBF3C158C508A00DF177C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -179,22 +264,6 @@
 				189EBF3D158C508A00DF177C /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		189EBF48158C508A00DF177C /* ViewController_iPhone.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				189EBF49158C508A00DF177C /* en */,
-			);
-			name = ViewController_iPhone.xib;
-			sourceTree = "<group>";
-		};
-		189EBF4B158C508A00DF177C /* ViewController_iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				189EBF4C158C508A00DF177C /* en */,
-			);
-			name = ViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -252,7 +321,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SketchCam/SketchCam-Prefix.pch";
+				HEADER_SEARCH_PATHS = "vendor/gpuimage/framework/source/**";
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -263,7 +334,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SketchCam/SketchCam-Prefix.pch";
+				HEADER_SEARCH_PATHS = "vendor/gpuimage/framework/source/**";
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
