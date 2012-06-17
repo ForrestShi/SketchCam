@@ -8,20 +8,46 @@
 
 #import "ViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "MKStoreManager.h"
 
+#define SWITCH_CAMERA_WIDTH     (IS_PAD() ? 80.0 : 60.)
+#define SWITCH_CAMERA_HEIGHT    (IS_PAD() ? 60.0 : 45.)
+#define GAP_X                   (IS_PAD() ? 30.0 : 20.)
+#define GAP_Y                   (IS_PAD() ? 30.0 : 20.)
+
+
+#define TAKE_PIC_BTN_WIDTH     (IS_PAD() ? 80.0 : 60.)
+#define TAKE_PIC_BTN_HEIGHT    (IS_PAD() ? 60.0 : 45.)
+
+#define BOTTOM_OFFSET_X        (IS_PAD() ? 10.0 : 6.)
+#define BOTTOM_OFFSET_Y        (IS_PAD() ? 10.0 : 6.)
+
+#define CAPTURED_THUMB_IMAGE_HEIGHT ((IS_PAD())? 102.4 *0.8 : 48 * 1.5 * 0.8)
+#define CAPTURED_THUMB_IMAGE_WIDTH  (CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. ))
+
+#define BOTTOM_SWITCH_WIDTH         ((IS_PAD()) ? 80.0 : 60.)
+#define BOTTOM_SWITCH_HEIGHT        ((IS_PAD()) ? 20.0 : 15.)
+
+static NSString *kStillCaptureImage = @"camera1@96.png";
+static NSString *kVideoStartRecordImage = @"media_record.png";
+static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
 @interface ViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
     GPUImageOutput<GPUImageInput> *filter;
     UISlider *filterSettingsSlider;
+    UILabel *timingLabel;
     UIButton *photoCaptureButton;
     UIImageView *thumbCapturedImageView;
     UIView *whiteFlashView ;
     UIPopoverController *popoverCtr;
     BOOL            captureStillImage;
     BOOL            isRecording;
+    NSTimer         *recordTimer;
     GPUImageMovieWriter* movieWriter;
     NSURL *movieURL ;
+    
+    NSUInteger      usedTimesOfCapture;
 }
 
 - (void)updateSliderValue:(id)sender;
@@ -31,24 +57,6 @@
 
 @implementation ViewController
 
-
-#define SWITCH_CAMERA_WIDTH     80.0
-#define SWITCH_CAMERA_HEIGHT    60.0
-#define GAP_X                   30.0 
-#define GAP_Y                   30.0
-
-
-#define TAKE_PIC_BTN_WIDTH     80.0
-#define TAKE_PIC_BTN_HEIGHT    60.0
-
-#define BOTTOM_OFFSET_X        10.0
-#define BOTTOM_OFFSET_Y        10.0
-
-#define CAPTURED_THUMB_IMAGE_HEIGHT ((IS_PAD())? 102.4 *0.8 : 48 * 1.5 * 0.8)
-#define CAPTURED_THUMB_IMAGE_WIDTH  CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. )
-
-#define BOTTOM_SWITCH_WIDTH         80.0
-#define BOTTOM_SWITCH_HEIGHT        20.0
 
 
 - (void)loadView 
@@ -63,9 +71,13 @@
     float viewHeight = mainScreenFrame.size.height;
         
     // slider
-    filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1, viewHeight * 0.8, 
+    filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1,
+                                                                      IS_PAD()? viewHeight*0.8 : viewHeight*.7, 
                                                                       viewWidth *.8, viewHeight * .1)];
     
+    [filterSettingsSlider setThumbTintColor:[UIColor orangeColor]];
+    [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
+    [filterSettingsSlider setBackgroundColor:[UIColor clearColor]];
     [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
 	filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     filterSettingsSlider.minimumValue = 0.0;
@@ -74,21 +86,27 @@
     
     [primaryView addSubview:filterSettingsSlider];
     
+    //time label for recording 
+    timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth - 200.0, 10., 180.0, 20.)];
+    timingLabel.backgroundColor = [UIColor clearColor];
+    timingLabel.textColor = [UIColor redColor];
+    timingLabel.textAlignment = UITextAlignmentRight;
+    timingLabel.hidden = YES;
+    [primaryView addSubview:timingLabel];
+    
     //capture button
-    photoCaptureButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    photoCaptureButton.frame = CGRectMake(viewWidth - TAKE_PIC_BTN_WIDTH - GAP_X, 
+    photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
+    photoCaptureButton.frame = CGRectMake(viewWidth - TAKE_PIC_BTN_WIDTH , 
                                           viewHeight/2, 
                                           TAKE_PIC_BTN_WIDTH, 
                                           TAKE_PIC_BTN_HEIGHT);
     
-    [photoCaptureButton setTitle:@"Capture Photo" forState:UIControlStateNormal];
+    DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
+    [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
 	photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [photoCaptureButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
     [primaryView addSubview:photoCaptureButton];
-
-    
-    
     
     //Bottom controller panel 
     
@@ -96,14 +114,21 @@
                                                                           IS_PAD()? viewHeight*0.9 : viewHeight*.85, 
                                                                           viewWidth, 
                                                                           IS_PAD()? viewHeight*0.1 : viewHeight*0.15)];
-    bottomControlPanel.backgroundColor = [UIColor clearColor];
-    
+    bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
+    bottomControlPanel.layer.cornerRadius = 10.0;
+    bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
+    bottomControlPanel.layer.shadowOpacity = 0.5;
+    bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
         
     // thumb 
-    thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, BOTTOM_OFFSET_Y,  (int)roundf( CAPTURED_THUMB_IMAGE_WIDTH), (int)roundf(CAPTURED_THUMB_IMAGE_HEIGHT))];
+    thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, BOTTOM_OFFSET_Y,  (int)roundf( CAPTURED_THUMB_IMAGE_HEIGHT), (int)roundf(CAPTURED_THUMB_IMAGE_HEIGHT))];
     DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
+    thumbCapturedImageView.backgroundColor = [UIColor clearColor];
     
-    thumbCapturedImageView.backgroundColor = [UIColor redColor];
+    //thumbCapturedImageView.layer.cornerRadius = 8.0;
+    thumbCapturedImageView.layer.borderColor = [UIColor orangeColor].CGColor;
+    thumbCapturedImageView.layer.borderWidth = 2.0;
+    
     thumbCapturedImageView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     [thumbCapturedImageView addGestureRecognizer:tapGesture];
@@ -113,22 +138,24 @@
 
     // switch from photo and video 
     UISwitch *photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(
-                                                                            viewWidth - BOTTOM_OFFSET_X - BOTTOM_SWITCH_WIDTH, 
-                                                                            bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2,
+                                                                            viewWidth - BOTTOM_OFFSET_X/2 - BOTTOM_SWITCH_WIDTH, 
+                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
                                                                             BOTTOM_SWITCH_WIDTH, 
-                                                                            BOTTOM_SWITCH_HEIGHT)];
-    [photoSwitchVideo addTarget:self action:@selector(switchVideo:) forControlEvents:UIControlEventTouchUpInside];
+                                                                            MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
+    [photoSwitchVideo setOnTintColor:[UIColor redColor]];
     photoSwitchVideo.backgroundColor = [UIColor clearColor];
+    [photoSwitchVideo addTarget:self action:@selector(switchVideo:) forControlEvents:UIControlEventTouchUpInside];
     [bottomControlPanel addSubview:photoSwitchVideo];
     
     
     
     // swich of front/back camera 
     UIButton *switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    switchFrontBackButton.backgroundColor = [UIColor blueColor];
-    switchFrontBackButton.frame = CGRectMake(photoSwitchVideo.frame.origin.x - 100. , 
-                                             photoSwitchVideo.frame.origin.y, 
-                                             60., 40.);
+    [switchFrontBackButton setImage:[UIImage imageNamed:@"camera@72.png"] forState:UIControlStateNormal];
+
+    switchFrontBackButton.frame = CGRectMake(photoSwitchVideo.frame.origin.x - 64. - GAP_X/2 , 
+                                             GAP_Y , 
+                                             64., 64.);
     [bottomControlPanel addSubview:switchFrontBackButton];
     [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -244,6 +271,12 @@
 
 - (void) switchVideo:(id)sender{
     captureStillImage = !captureStillImage;
+    
+    if (!captureStillImage) {
+        [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
+    }else {
+        [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
+    }
 }
 
 
@@ -255,6 +288,8 @@
     
 }
 
+#define FREETIMES_LIMITATION  2 
+#define kMyProduct @"com.dfa.sketchcam.takephoto"
 /*
  
  ISSUE: For the iPad2, there are some random noise when capturing photo 
@@ -262,6 +297,32 @@
  */
 - (void)takePhoto:(id)sender;
 {
+    // IN APP PURCHASE 
+    
+//    id valueOfTimes = [[NSUserDefaults standardUserDefaults] objectForKey:@"usedTimes"];
+//    if (valueOfTimes == nil) {
+//        usedTimesOfCapture = 0;
+//    }else {
+//        usedTimesOfCapture = [valueOfTimes intValue];
+//    }
+//    
+//    usedTimesOfCapture++;
+//    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:usedTimesOfCapture] forKey:@"usedTimes"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+//
+//    
+//    DLog(@"used times %d",usedTimesOfCapture);
+//    
+//    if (usedTimesOfCapture > FREETIMES_LIMITATION ) {
+//        [[MKStoreManager sharedManager] buyFeature:kMyProduct onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt) {
+//            //
+//            DLog(@"DEBUG %@ %@", purchasedFeature, purchasedReceipt);
+//        } onCancelled:^{
+//            //
+//            DLog(@"DEBUG");
+//        }];
+//    }
+    
     if (!captureStillImage) {
         return [self recordVideo];     
     }
@@ -306,6 +367,18 @@
     
 }
 
+long recordingSeconds = 0;
+
+- (void) updateRecordTime:(id)sender{
+    recordingSeconds++;
+    [timingLabel setText:[NSString stringWithFormat:@"Recording %d s", recordingSeconds]];
+    
+    // FREE VERSION LIMITATION 
+    if (recordingSeconds >= 6 ) {
+        [self stopRecording];
+    }
+}
+
 - (void) recordVideo{
     if (isRecording) {
         [self stopRecording];
@@ -316,9 +389,12 @@
 
 - (void) startRecording{
     
-    isRecording = YES;
-    photoCaptureButton.titleLabel.text = @"Recording";
+    isRecording = YES;    
+    timingLabel.hidden = NO;
+    recordTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateRecordTime:) userInfo:nil repeats:YES];
     
+    [photoCaptureButton setImage:[UIImage imageNamed:kVideoStopRecordImage] forState:UIControlStateNormal];
+
     [stillCamera pauseCameraCapture];
     
     NSString *tmpFileName = [NSString stringWithFormat:@"movie%d.m4v",rand()];
@@ -349,7 +425,16 @@
 - (void) stopRecording{
     
     isRecording = NO;
-    photoCaptureButton.titleLabel.text = @"Stop";
+    if (recordTimer) {
+        [recordTimer invalidate];
+        recordTimer = nil;
+        
+        timingLabel.hidden = YES;
+        timingLabel.text = @"";
+        recordingSeconds = 0;
+    }
+    
+    [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
 
     double delayInSeconds = .5;
     dispatch_time_t stopTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
