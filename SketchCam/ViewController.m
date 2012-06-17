@@ -23,7 +23,7 @@
 #define BOTTOM_OFFSET_Y        (IS_PAD() ? 10.0 : 6.)
 
 #define CAPTURED_THUMB_IMAGE_HEIGHT ((IS_PAD())? 102.4 *0.8 : 48 * 1.5 * 0.8)
-#define CAPTURED_THUMB_IMAGE_WIDTH  (CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. ))
+//#define CAPTURED_THUMB_IMAGE_WIDTH  (CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. ))
 
 #define BOTTOM_SWITCH_WIDTH         ((IS_PAD()) ? 80.0 : 60.)
 #define BOTTOM_SWITCH_HEIGHT        ((IS_PAD()) ? 20.0 : 15.)
@@ -38,6 +38,8 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     UISlider *filterSettingsSlider;
     UILabel *timingLabel;
     UIButton *photoCaptureButton;
+    UISwitch *photoSwitchVideo;
+    UIButton *switchFrontBackButton ;
     UIImageView *thumbCapturedImageView;
     UIView *whiteFlashView ;
     UIPopoverController *popoverCtr;
@@ -111,9 +113,9 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     //Bottom controller panel 
     
     UIView *bottomControlPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 
-                                                                          IS_PAD()? viewHeight*0.9 : viewHeight*.85, 
+                                                                          IS_PAD()? viewHeight*0.9 : viewHeight*.82, 
                                                                           viewWidth, 
-                                                                          IS_PAD()? viewHeight*0.1 : viewHeight*0.15)];
+                                                                          IS_PAD()? viewHeight*0.1 : viewHeight*0.18)];
     bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
     bottomControlPanel.layer.cornerRadius = 10.0;
     bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
@@ -137,9 +139,8 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
 
     // switch from photo and video 
-    UISwitch *photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(
-                                                                            viewWidth - BOTTOM_OFFSET_X/2 - BOTTOM_SWITCH_WIDTH, 
-                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
+    photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
+                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT),
                                                                             BOTTOM_SWITCH_WIDTH, 
                                                                             MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
     [photoSwitchVideo setOnTintColor:[UIColor redColor]];
@@ -150,12 +151,13 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     
     // swich of front/back camera 
-    UIButton *switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [switchFrontBackButton setImage:[UIImage imageNamed:@"camera@72.png"] forState:UIControlStateNormal];
 
     switchFrontBackButton.frame = CGRectMake(photoSwitchVideo.frame.origin.x - 64. - GAP_X/2 , 
-                                             GAP_Y , 
-                                             64., 64.);
+                                             GAP_Y/2 , 
+                                             IS_PAD()? 64.:48., 
+                                             IS_PAD() ? 64.:48.);
     [bottomControlPanel addSubview:switchFrontBackButton];
     [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -201,28 +203,41 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-    }
+    return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
+
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     DLog(@"DEBUG");
-
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+    
     [stillCamera resumeCameraCapture];
     [picker dismissModalViewControllerAnimated:YES];
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     DLog(@"DEBUG");
-
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+    
     [stillCamera resumeCameraCapture];
     [picker dismissModalViewControllerAnimated:YES];
+
 }
 
+- (void)navigationController:(UINavigationController *)navigationController 
+      willShowViewController:(UIViewController *)viewController 
+                    animated:(BOOL)animated {
+    
+    if ([navigationController isKindOfClass:[UIImagePickerController class]] && 
+        ((UIImagePickerController *)navigationController).sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+    }
+}
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
     return YES;
@@ -243,7 +258,8 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     DLog(@"DEBUG");
     UIImagePickerController *imgPickerVC = [[UIImagePickerController alloc] init];
     imgPickerVC.delegate = self;
-    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
+
     imgPickerVC.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     //imgPickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imgPickerVC.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imgPickerVC.sourceType];
@@ -266,11 +282,26 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 // use front/back camera
 - (void)switchCameras:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+    animation.delegate = self;
+    animation.duration = 1.0;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    animation.type = @"cameraIris";
+    [self.view.layer addAnimation:animation forKey:nil];
+
     [stillCamera rotateCamera];
 }
 
 - (void) switchVideo:(id)sender{
     captureStillImage = !captureStillImage;
+    
+    CATransition *animation = [CATransition animation];
+    animation.delegate = self;
+    animation.duration = 1.0;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    animation.type = captureStillImage ? @"fromRight" : @"fromLeft";
+    animation.type = @"flip";
+    [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
     
     if (!captureStillImage) {
         [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
@@ -384,15 +415,26 @@ long recordingSeconds = 0;
         [self stopRecording];
     }else {
         [self startRecording];
-    }        
+    }  
 }
 
 - (void) startRecording{
     
+    [photoSwitchVideo setEnabled:NO];
+    [switchFrontBackButton setEnabled:NO];
+
     isRecording = YES;    
     timingLabel.hidden = NO;
+
     recordTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateRecordTime:) userInfo:nil repeats:YES];
     
+    CATransition *animation = [CATransition animation];
+    animation.delegate = self;
+    animation.duration = .5;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    //animation.subtype = @"fromLeft";
+    animation.type = @"fade";
+    [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
     [photoCaptureButton setImage:[UIImage imageNamed:kVideoStopRecordImage] forState:UIControlStateNormal];
 
     [stillCamera pauseCameraCapture];
@@ -424,6 +466,9 @@ long recordingSeconds = 0;
 
 - (void) stopRecording{
     
+    [photoSwitchVideo setEnabled:YES];
+    [switchFrontBackButton setEnabled:YES];
+
     isRecording = NO;
     if (recordTimer) {
         [recordTimer invalidate];
@@ -434,6 +479,14 @@ long recordingSeconds = 0;
         recordingSeconds = 0;
     }
     
+    CATransition *animation = [CATransition animation];
+    animation.delegate = self;
+    animation.duration = .5;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    //animation.subtype = @"fromLeft";
+    animation.type = @"fade";
+    [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
+
     [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
 
     double delayInSeconds = .5;
