@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "LaunchImageTransition.h"
 #import "ViewController.h"
 
 @implementation AppDelegate
@@ -18,12 +18,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
-    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[ViewController alloc] init];
-    self.viewController.view.frame = self.window.bounds;
-    self.window.rootViewController = self.viewController;
+    ViewController *rootVC = [[ViewController alloc] init];
+    LaunchImageTransition *launchVC = [[LaunchImageTransition alloc] initWithViewController:rootVC animation:UIModalTransitionStyleFlipHorizontal delay:1.0];
+    launchVC.view.frame = self.window.bounds;
+    self.window.rootViewController = launchVC;
     [self.window makeKeyAndVisible];
     return YES;
 }

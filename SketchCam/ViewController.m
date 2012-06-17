@@ -35,6 +35,8 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 @interface ViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
     GPUImageOutput<GPUImageInput> *filter;
+    
+    GPUImageView *cameraView;
     UISlider *filterSettingsSlider;
     UILabel *timingLabel;
     UIButton *photoCaptureButton;
@@ -64,13 +66,27 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 - (void)loadView 
 {
 	CGRect mainScreenFrame = [[UIScreen mainScreen] bounds];
+    DLog(@"main screen frame %@", NSStringFromCGRect(mainScreenFrame));
     
+    self.view = [[UIView alloc] initWithFrame:mainScreenFrame];
+    self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"sketchblur2.jpg"]];
+    
+    CGRect cameraViewFrame = CGRectMake(mainScreenFrame.origin.x, mainScreenFrame.origin.y, 
+                                        mainScreenFrame.size.width, 
+                                        IS_PAD() ? mainScreenFrame.size.height *0.9 : mainScreenFrame.size.height * 0.82);
+    
+    CGRect bottomControlPanelFrame = CGRectMake(0, cameraViewFrame.size.height - 20.0, mainScreenFrame.size.width, mainScreenFrame.size.height - cameraViewFrame.size.height);
+    
+    DLog(@"camera view frame %@", NSStringFromCGRect(cameraViewFrame));
+    DLog(@"bottom panel frame %@", NSStringFromCGRect(bottomControlPanelFrame));
+
     // Yes, I know I'm a caveman for doing all this by hand
-	GPUImageView *primaryView = [[GPUImageView alloc] initWithFrame:mainScreenFrame];
-	primaryView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	cameraView = [[GPUImageView alloc] initWithFrame:cameraViewFrame];
+	cameraView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    cameraView.backgroundColor = [UIColor clearColor];
     
-    float viewWidth = mainScreenFrame.size.width;
-    float viewHeight = mainScreenFrame.size.height;
+    float viewWidth = cameraViewFrame.size.width;
+    float viewHeight = cameraViewFrame.size.height;
         
     // slider
     filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1,
@@ -86,7 +102,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     filterSettingsSlider.maximumValue = 3.0;
     filterSettingsSlider.value = 1.0;
     
-    [primaryView addSubview:filterSettingsSlider];
+    [cameraView addSubview:filterSettingsSlider];
     
     //time label for recording 
     timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth - 200.0, 10., 180.0, 20.)];
@@ -94,7 +110,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     timingLabel.textColor = [UIColor redColor];
     timingLabel.textAlignment = UITextAlignmentRight;
     timingLabel.hidden = YES;
-    [primaryView addSubview:timingLabel];
+    [cameraView addSubview:timingLabel];
     
     //capture button
     photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -108,14 +124,11 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
 	photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [primaryView addSubview:photoCaptureButton];
+    [cameraView addSubview:photoCaptureButton];
     
     //Bottom controller panel 
+    UIView *bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
     
-    UIView *bottomControlPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 
-                                                                          IS_PAD()? viewHeight*0.9 : viewHeight*.82, 
-                                                                          viewWidth, 
-                                                                          IS_PAD()? viewHeight*0.1 : viewHeight*0.18)];
     bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
     bottomControlPanel.layer.cornerRadius = 10.0;
     bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
@@ -123,7 +136,11 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
         
     // thumb 
-    thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, BOTTOM_OFFSET_Y,  (int)roundf( CAPTURED_THUMB_IMAGE_HEIGHT), (int)roundf(CAPTURED_THUMB_IMAGE_HEIGHT))];
+    thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, 
+                                                                           BOTTOM_OFFSET_Y,  
+                                                                           bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2., 
+                                                                           bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2.)];
+    
     DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
     thumbCapturedImageView.backgroundColor = [UIColor clearColor];
     
@@ -140,7 +157,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
     // switch from photo and video 
     photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
-                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT),
+                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
                                                                             BOTTOM_SWITCH_WIDTH, 
                                                                             MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
     [photoSwitchVideo setOnTintColor:[UIColor redColor]];
@@ -161,15 +178,16 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     [bottomControlPanel addSubview:switchFrontBackButton];
     [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
 
-    [primaryView addSubview:bottomControlPanel];
+    [self.view addSubview:bottomControlPanel];
     
     //white flash screen
-    whiteFlashView = [[UIView alloc] initWithFrame:primaryView.bounds];
+    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
     whiteFlashView.backgroundColor = [UIColor whiteColor];
     whiteFlashView.alpha = 0;
-    [primaryView addSubview:whiteFlashView];
+    [cameraView addSubview:whiteFlashView];
+    [self.view addSubview:cameraView];
     
-	self.view = primaryView;	
+	//self.view = cameraView;	
 }
 
 
@@ -177,8 +195,11 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    stillCamera = [[GPUImageStillCamera alloc] init];
-    //stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	    captureSessionSetup = AVCaptureSessionPresetPhoto;
+    
+    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     filter = [[GPUImageSketchFilter alloc] init];
   
@@ -186,7 +207,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 	[filter prepareForImageCapture];
     
     [stillCamera addTarget:filter];
-    GPUImageView *filterView = (GPUImageView *)self.view;
+    GPUImageView *filterView = (GPUImageView *)cameraView;
     [filter addTarget:filterView];
 
     captureStillImage = YES;
@@ -286,8 +307,10 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     animation.delegate = self;
     animation.duration = 1.0;
     animation.timingFunction = UIViewAnimationCurveEaseInOut;
-    animation.type = @"cameraIris";
-    [self.view.layer addAnimation:animation forKey:nil];
+    //animation.type = @"cameraIris";
+    animation.type = @"flip";
+    animation.subtype = @"fromLeft";
+    [cameraView.layer addAnimation:animation forKey:nil];
 
     [stillCamera rotateCamera];
 }
