@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MKStoreManager.h"
+#import "FSGPUImageFilterManager.h"
 
 #define SWITCH_CAMERA_WIDTH     (IS_PAD() ? 80.0 : 60.)
 #define SWITCH_CAMERA_HEIGHT    (IS_PAD() ? 60.0 : 45.)
@@ -41,9 +42,12 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     UILabel *timingLabel;
     UIButton *photoCaptureButton;
     UISwitch *photoSwitchVideo;
-    UIButton *switchFrontBackButton ;
+    UIButton *backButton;
+    UIButton *switchFrontBackButton;
+    
     UIImageView *thumbCapturedImageView;
     UIView *whiteFlashView ;
+    UIView *bottomControlPanel;
     UIPopoverController *popoverCtr;
     BOOL            captureStillImage;
     BOOL            isRecording;
@@ -52,6 +56,17 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     NSURL *movieURL ;
     
     NSUInteger      usedTimesOfCapture;
+    
+    __block BOOL                _atomicGestureUsedFlag;
+    __block CGRect              _originalFrame;
+    __block BOOL                _isTapped;
+    __block BOOL                _viewIsFullScreenMode;
+    
+    NSUInteger                  _pageIndex;
+    GPUImageShowcaseFilterType  _filterType;
+    __unsafe_unretained UISlider *_filterSettingsSlider;
+    BOOL                        isUsingFrontFacingCamera;
+    
 }
 
 - (void)updateSliderValue:(id)sender;
@@ -62,132 +77,299 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 @implementation ViewController
 
 
+#define ROWS    3
+#define COLS    3
 
-- (void)loadView 
+- (void) hideFullScreenUI:(BOOL)hidden{
+    
+    filterSettingsSlider.hidden = hidden;
+    timingLabel.hidden = hidden;
+    photoCaptureButton.hidden = hidden;
+    bottomControlPanel.hidden = hidden;
+    backButton.hidden = hidden;
+    switchFrontBackButton.hidden = hidden;
+    
+}
+
+- (void) createFullScreenUI 
 {
-	CGRect mainScreenFrame = [[UIScreen mainScreen] bounds];
-    DLog(@"main screen frame %@", NSStringFromCGRect(mainScreenFrame));
-    
-    self.view = [[UIView alloc] initWithFrame:mainScreenFrame];
-    self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"sketchblur2.jpg"]];
-    
-    CGRect cameraViewFrame = CGRectMake(mainScreenFrame.origin.x, mainScreenFrame.origin.y, 
-                                        mainScreenFrame.size.width, 
-                                        IS_PAD() ? mainScreenFrame.size.height *0.9 : mainScreenFrame.size.height * 0.82);
-    
-    CGRect bottomControlPanelFrame = CGRectMake(0, cameraViewFrame.size.height - 20.0, mainScreenFrame.size.width, mainScreenFrame.size.height - cameraViewFrame.size.height);
-    
-    DLog(@"camera view frame %@", NSStringFromCGRect(cameraViewFrame));
-    DLog(@"bottom panel frame %@", NSStringFromCGRect(bottomControlPanelFrame));
+    [self hideFullScreenUI:NO];
 
-    // Yes, I know I'm a caveman for doing all this by hand
-	cameraView = [[GPUImageView alloc] initWithFrame:cameraViewFrame];
-	cameraView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    cameraView.backgroundColor = [UIColor clearColor];
+    float viewWidth = self.view.bounds.size.width;
+    float viewHeight = self.view.bounds.size.height;
     
-    float viewWidth = cameraViewFrame.size.width;
-    float viewHeight = cameraViewFrame.size.height;
+    // back button 
+    if (!backButton) {
+        backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [backButton setImage:[UIImage imageNamed:@"left.png"] forState:UIControlStateNormal];
         
+        backButton.frame = CGRectMake(GAP_X, 
+                                                 GAP_Y/2 , 
+                                                 IS_PAD()? 64.:48., 
+                                                 IS_PAD() ? 64.:48.);
+        backButton.userInteractionEnabled = YES;
+        [backButton addTarget:self action:@selector(backToHome) forControlEvents:UIControlEventTouchUpInside];
+        [cameraView addSubview:backButton];
+
+    }
+
+    
+    // swich of front/back camera 
+    if (!switchFrontBackButton) {
+        switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [switchFrontBackButton setImage:[UIImage imageNamed:@"camera@72.png"] forState:UIControlStateNormal];
+        
+        switchFrontBackButton.frame = CGRectMake(viewWidth - 64. - GAP_X/2 , 
+                                                 GAP_Y/2 , 
+                                                 IS_PAD()? 64.:48., 
+                                                 IS_PAD() ? 64.:48.);
+        [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    [cameraView addSubview:switchFrontBackButton];
+    
     // slider
-    filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1,
-                                                                      IS_PAD()? viewHeight*0.8 : viewHeight*.7, 
-                                                                      viewWidth *.8, viewHeight * .1)];
-    
-    [filterSettingsSlider setThumbTintColor:[UIColor orangeColor]];
-    [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
-    [filterSettingsSlider setBackgroundColor:[UIColor clearColor]];
-    [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
-	filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    filterSettingsSlider.minimumValue = 0.0;
-    filterSettingsSlider.maximumValue = 3.0;
-    filterSettingsSlider.value = 1.0;
-    
+    if (!filterSettingsSlider) {
+        filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1,
+                                                                          IS_PAD()? viewHeight*0.8 : viewHeight*.7, 
+                                                                          viewWidth *.8, viewHeight * .1)];
+        
+        [filterSettingsSlider setThumbTintColor:[UIColor orangeColor]];
+        [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
+        [filterSettingsSlider setBackgroundColor:[UIColor clearColor]];
+        [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
+        filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        filterSettingsSlider.minimumValue = 0.0;
+        filterSettingsSlider.maximumValue = 3.0;
+        filterSettingsSlider.value = 1.0; 
+    }
     [cameraView addSubview:filterSettingsSlider];
     
     //time label for recording 
-    timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth - 200.0, 10., 180.0, 20.)];
-    timingLabel.backgroundColor = [UIColor clearColor];
-    timingLabel.textColor = [UIColor redColor];
-    timingLabel.textAlignment = UITextAlignmentRight;
-    timingLabel.hidden = YES;
+    if (!timingLabel) {
+        timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth - 200.0, 10., 180.0, 20.)];
+        timingLabel.backgroundColor = [UIColor clearColor];
+        timingLabel.textColor = [UIColor redColor];
+        timingLabel.textAlignment = UITextAlignmentRight;
+        timingLabel.hidden = YES;
+ 
+    }
     [cameraView addSubview:timingLabel];
     
-    //capture button
-    photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
-    photoCaptureButton.frame = CGRectMake(viewWidth - TAKE_PIC_BTN_WIDTH , 
-                                          viewHeight/2, 
-                                          TAKE_PIC_BTN_WIDTH, 
-                                          TAKE_PIC_BTN_HEIGHT);
-    
-    DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
-    [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
-	photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [cameraView addSubview:photoCaptureButton];
     
     //Bottom controller panel 
-    UIView *bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
-    
-    bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
-    bottomControlPanel.layer.cornerRadius = 10.0;
-    bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
-    bottomControlPanel.layer.shadowOpacity = 0.5;
-    bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
+    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - 60.0, 
+                                                self.view.bounds.size.width,
+                                                60.);
+
+    if (!bottomControlPanel) {
+
+        bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
         
+        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
+        bottomControlPanel.layer.cornerRadius = 10.0;
+        bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
+        bottomControlPanel.layer.shadowOpacity = 0.5;
+        bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
+ 
+    }
+    
     // thumb 
-    thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, 
-                                                                           BOTTOM_OFFSET_Y,  
-                                                                           bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2., 
-                                                                           bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2.)];
+    if (!thumbCapturedImageView) {
+        thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, 
+                                                                               BOTTOM_OFFSET_Y,  
+                                                                               bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2., 
+                                                                               bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2.)];
+        
+        DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
+        thumbCapturedImageView.backgroundColor = [UIColor clearColor];
+        
+        //thumbCapturedImageView.layer.cornerRadius = 8.0;
+        thumbCapturedImageView.layer.borderColor = [UIColor orangeColor].CGColor;
+        thumbCapturedImageView.layer.borderWidth = 2.0;
+        
+        thumbCapturedImageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapThumbImage:)];
+        [thumbCapturedImageView addGestureRecognizer:tapGesture];
+        [bottomControlPanel addSubview:thumbCapturedImageView];
+    }
     
-    DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
-    thumbCapturedImageView.backgroundColor = [UIColor clearColor];
+    //capture button
+    if (!photoCaptureButton) {
+        photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
+
+        photoCaptureButton.frame = CGRectMake(viewWidth/2 - TAKE_PIC_BTN_WIDTH/2, 
+                                              GAP_Y/2, TAKE_PIC_BTN_WIDTH, TAKE_PIC_BTN_HEIGHT);
+        DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
+        [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
+        photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    [bottomControlPanel addSubview:photoCaptureButton];
+
     
-    //thumbCapturedImageView.layer.cornerRadius = 8.0;
-    thumbCapturedImageView.layer.borderColor = [UIColor orangeColor].CGColor;
-    thumbCapturedImageView.layer.borderWidth = 2.0;
-    
-    thumbCapturedImageView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
-    [thumbCapturedImageView addGestureRecognizer:tapGesture];
-
-    [bottomControlPanel addSubview:thumbCapturedImageView];
-
-
     // switch from photo and video 
-    photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
-                                                                            MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
-                                                                            BOTTOM_SWITCH_WIDTH, 
-                                                                            MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
-    [photoSwitchVideo setOnTintColor:[UIColor redColor]];
-    photoSwitchVideo.backgroundColor = [UIColor clearColor];
-    [photoSwitchVideo addTarget:self action:@selector(switchVideo:) forControlEvents:UIControlEventTouchUpInside];
-    [bottomControlPanel addSubview:photoSwitchVideo];
-    
-    
-    
-    // swich of front/back camera 
-    switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [switchFrontBackButton setImage:[UIImage imageNamed:@"camera@72.png"] forState:UIControlStateNormal];
+    if (!photoSwitchVideo) {
+        photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
+                                                                      MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
+                                                                      BOTTOM_SWITCH_WIDTH, 
+                                                                      MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
+        [photoSwitchVideo setOnTintColor:[UIColor redColor]];
+        photoSwitchVideo.backgroundColor = [UIColor clearColor];
+        [photoSwitchVideo addTarget:self action:@selector(switchVideo:) forControlEvents:UIControlEventTouchUpInside];
+        [bottomControlPanel addSubview:photoSwitchVideo];
+        
+    }
 
-    switchFrontBackButton.frame = CGRectMake(photoSwitchVideo.frame.origin.x - 64. - GAP_X/2 , 
-                                             GAP_Y/2 , 
-                                             IS_PAD()? 64.:48., 
-                                             IS_PAD() ? 64.:48.);
-    [bottomControlPanel addSubview:switchFrontBackButton];
-    [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
-
-    [self.view addSubview:bottomControlPanel];
+    
+    
+    [cameraView addSubview:bottomControlPanel];
     
     //white flash screen
-    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
-    whiteFlashView.backgroundColor = [UIColor whiteColor];
-    whiteFlashView.alpha = 0;
-    [cameraView addSubview:whiteFlashView];
-    [self.view addSubview:cameraView];
+    //    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
+    //    whiteFlashView.backgroundColor = [UIColor whiteColor];
+    //    whiteFlashView.alpha = 0;
+    //    [cameraView addSubview:whiteFlashView];
+    //    [self.view addSubview:cameraView];
     
-	//self.view = cameraView;	
+    //self.view = cameraView;	
+}
+
+
+- (void) viewEnterFullScreen:(UIView*)view{
+    
+    UIView *touchedView = view;
+    cameraView = touchedView;
+    
+    [UIView animateWithDuration:1.0 animations:^{
+        _originalFrame = touchedView.frame;
+        touchedView.frame = self.view.bounds;
+        
+        DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
+        
+    } completion:^(BOOL finished) {
+        //
+        if (finished) {
+                            
+            _viewIsFullScreenMode = YES;
+                
+            [self createFullScreenUI];            
+            
+        }
+    }];
+}
+
+- (void) viewLeaveFullScreen:(UIView*)view{
+    
+    UIView *touchedView = view;
+    [UIView animateWithDuration:1.0 animations:^{
+        DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
+        touchedView.frame = _originalFrame;
+        
+        //[self hideFullScreenUI];
+        [self hideFullScreenUI:YES];
+        
+    } completion:^(BOOL finished) {
+        //
+        _viewIsFullScreenMode = NO;
+        
+    }];
+    
+}
+
+
+- (void) onPinch:(UIPinchGestureRecognizer*)gesture{
+    
+    [self.view bringSubviewToFront:gesture.view];
+    
+    float scale = [gesture scale];
+    
+    if ([gesture state] == UIGestureRecognizerStateEnded ) {
+        if (scale > 1.0 && !_viewIsFullScreenMode) {
+            [self viewEnterFullScreen:gesture.view];
+        }else if( scale < 1.0 && _viewIsFullScreenMode ) {
+            [self viewLeaveFullScreen:gesture.view];
+        }
+    }
+}
+
+
+- (void) onTap:(UITapGestureRecognizer*)gesture{
+
+    if ([gesture state] == UIGestureRecognizerStateEnded && !_isTapped ) {
+
+        _isTapped = YES;
+        
+        UIView *tapView = [gesture view];
+        
+        [self.view bringSubviewToFront:tapView];
+
+        [self viewEnterFullScreen:tapView];
+        
+    }
+}
+
+- (void) backToHome{
+    if (_isTapped) {
+        [self viewLeaveFullScreen:cameraView];
+        _isTapped = NO;
+        _viewIsFullScreenMode = NO;
+    }
+}
+
+- (void) createSubCameraViewsWithCamera:(AVCaptureDevicePosition)devicePosition{
+    
+    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	    captureSessionSetup = AVCaptureSessionPresetPhoto;
+    
+    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    //    filter = [[GPUImageSketchFilter alloc] init];
+    //
+    //	[filter prepareForImageCapture];
+    //    
+    //    [stillCamera addTarget:filter];
+    //    GPUImageView *filterView = (GPUImageView *)cameraView;
+    //    [filter addTarget:filterView];
+    
+    
+    CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	
+    CGFloat subViewWidth = roundf(mainScreenFrame.size.width/ ROWS );
+    CGFloat subViewHeight = roundf(mainScreenFrame.size.height/ COLS );
+    
+    _pageIndex = 0;
+    for (int i = 0 ; i < COLS; i++) {
+        for (int j = 0 ; j < ROWS; j++) {
+            // ( i, j) 
+            GPUImageView *subView = [[GPUImageView alloc ] initWithFrame:CGRectMake(j*subViewWidth, i*subViewHeight, subViewWidth, subViewHeight)];
+            [self.view addSubview:subView];
+            
+            GPUImageFilter *subFilter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter:_pageIndex * ROWS *COLS + ROWS*i + j];
+            [subFilter forceProcessingAtSize:subView.sizeInPixels];
+            [stillCamera addTarget:subFilter];
+            [subFilter addTarget:subView];
+        }
+    }
+    
+    //tap gesture to get full screen 
+    _isTapped = NO;
+    _viewIsFullScreenMode = NO;
+    
+    //int count = 0; 
+    for (UIView *subView in [self.view subviews]) {
+        if ([subView isKindOfClass:[GPUImageView class]]) {
+            //DLog(@"count %d subview %@", count++ , subView );
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+            
+            UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinch:)];
+            
+            [subView addGestureRecognizer:tapGesture ];
+            [subView addGestureRecognizer:pinchGesture];
+            
+        }
+    }
+    
 }
 
 
@@ -195,25 +377,12 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-	    captureSessionSetup = AVCaptureSessionPresetPhoto;
-    
-    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-    stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-    filter = [[GPUImageSketchFilter alloc] init];
-  
-    
-	[filter prepareForImageCapture];
-    
-    [stillCamera addTarget:filter];
-    GPUImageView *filterView = (GPUImageView *)cameraView;
-    [filter addTarget:filterView];
+    [self createSubCameraViewsWithCamera:AVCaptureDevicePositionBack];
 
     captureStillImage = YES;
     isRecording = NO;
     [stillCamera startCameraCapture];
-
+    
 }
 
 - (void)viewDidUnload
@@ -236,7 +405,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     [stillCamera resumeCameraCapture];
     [picker dismissModalViewControllerAnimated:YES];
-
+    
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
@@ -246,7 +415,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     [stillCamera resumeCameraCapture];
     [picker dismissModalViewControllerAnimated:YES];
-
+    
 }
 
 - (void)navigationController:(UINavigationController *)navigationController 
@@ -275,12 +444,12 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
 #pragma mark - Actions of UI 
 
-- (void) onTap:(id)sender{
+- (void) onTapThumbImage:(id)sender{
     DLog(@"DEBUG");
     UIImagePickerController *imgPickerVC = [[UIImagePickerController alloc] init];
     imgPickerVC.delegate = self;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
-
+    
     imgPickerVC.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     //imgPickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imgPickerVC.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imgPickerVC.sourceType];
@@ -311,7 +480,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     animation.type = @"flip";
     animation.subtype = @"fromLeft";
     [cameraView.layer addAnimation:animation forKey:nil];
-
+    
     [stillCamera rotateCamera];
 }
 
@@ -353,29 +522,29 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 {
     // IN APP PURCHASE 
     
-//    id valueOfTimes = [[NSUserDefaults standardUserDefaults] objectForKey:@"usedTimes"];
-//    if (valueOfTimes == nil) {
-//        usedTimesOfCapture = 0;
-//    }else {
-//        usedTimesOfCapture = [valueOfTimes intValue];
-//    }
-//    
-//    usedTimesOfCapture++;
-//    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:usedTimesOfCapture] forKey:@"usedTimes"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//
-//    
-//    DLog(@"used times %d",usedTimesOfCapture);
-//    
-//    if (usedTimesOfCapture > FREETIMES_LIMITATION ) {
-//        [[MKStoreManager sharedManager] buyFeature:kMyProduct onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt) {
-//            //
-//            DLog(@"DEBUG %@ %@", purchasedFeature, purchasedReceipt);
-//        } onCancelled:^{
-//            //
-//            DLog(@"DEBUG");
-//        }];
-//    }
+    //    id valueOfTimes = [[NSUserDefaults standardUserDefaults] objectForKey:@"usedTimes"];
+    //    if (valueOfTimes == nil) {
+    //        usedTimesOfCapture = 0;
+    //    }else {
+    //        usedTimesOfCapture = [valueOfTimes intValue];
+    //    }
+    //    
+    //    usedTimesOfCapture++;
+    //    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:usedTimesOfCapture] forKey:@"usedTimes"];
+    //    [[NSUserDefaults standardUserDefaults] synchronize];
+    //
+    //    
+    //    DLog(@"used times %d",usedTimesOfCapture);
+    //    
+    //    if (usedTimesOfCapture > FREETIMES_LIMITATION ) {
+    //        [[MKStoreManager sharedManager] buyFeature:kMyProduct onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt) {
+    //            //
+    //            DLog(@"DEBUG %@ %@", purchasedFeature, purchasedReceipt);
+    //        } onCancelled:^{
+    //            //
+    //            DLog(@"DEBUG");
+    //        }];
+    //    }
     
     if (!captureStillImage) {
         return [self recordVideo];     
@@ -391,7 +560,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
             whiteFlashView.alpha = 0;
         }];
     }];
-
+    
     
     [stillCamera capturePhotoAsJPEGProcessedUpToFilter:filter withCompletionHandler:^(NSData *processedJPEG, NSError *error){
         
@@ -412,9 +581,9 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
              runOnMainQueueWithoutDeadlocking(^{
                  //                 report_memory(@"Operation completed");
                  [photoCaptureButton setEnabled:YES];
-                            
+                 
                  [thumbCapturedImageView setImage:[UIImage imageWithData:processedJPEG]];
-
+                 
              });
          }];
     }];
@@ -445,10 +614,10 @@ long recordingSeconds = 0;
     
     [photoSwitchVideo setEnabled:NO];
     [switchFrontBackButton setEnabled:NO];
-
+    
     isRecording = YES;    
     timingLabel.hidden = NO;
-
+    
     recordTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateRecordTime:) userInfo:nil repeats:YES];
     
     CATransition *animation = [CATransition animation];
@@ -459,7 +628,7 @@ long recordingSeconds = 0;
     animation.type = @"fade";
     [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
     [photoCaptureButton setImage:[UIImage imageNamed:kVideoStopRecordImage] forState:UIControlStateNormal];
-
+    
     [stillCamera pauseCameraCapture];
     
     NSString *tmpFileName = [NSString stringWithFormat:@"movie%d.m4v",rand()];
@@ -474,7 +643,7 @@ long recordingSeconds = 0;
     [filter addTarget:movieWriter];
     
     [stillCamera resumeCameraCapture];
-
+    
     double delayToStartRecording = 0.5;
     dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, delayToStartRecording * NSEC_PER_SEC);
     dispatch_after(startTime, dispatch_get_main_queue(), ^(void){
@@ -482,16 +651,16 @@ long recordingSeconds = 0;
         
         stillCamera.audioEncodingTarget = movieWriter;
         [movieWriter startRecording];
-                
+        
     });
-
+    
 }
 
 - (void) stopRecording{
     
     [photoSwitchVideo setEnabled:YES];
     [switchFrontBackButton setEnabled:YES];
-
+    
     isRecording = NO;
     if (recordTimer) {
         [recordTimer invalidate];
@@ -509,9 +678,9 @@ long recordingSeconds = 0;
     //animation.subtype = @"fromLeft";
     animation.type = @"fade";
     [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
-
+    
     [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
-
+    
     double delayInSeconds = .5;
     dispatch_time_t stopTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(stopTime, dispatch_get_main_queue(), ^(void){
@@ -533,12 +702,12 @@ long recordingSeconds = 0;
                                         else {
                                             DLog(@"VIDEO SAVED - assetURL: %@", assetURL);
                                         }
-
+                                        
                                     }];
-    
+        
         
     });
-
+    
 }
 
 @end
