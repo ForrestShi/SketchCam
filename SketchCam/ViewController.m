@@ -95,8 +95,8 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 {
     [self hideFullScreenUI:NO];
 
-    float viewWidth = self.view.bounds.size.width;
-    float viewHeight = self.view.bounds.size.height;
+    float viewWidth = [[UIScreen mainScreen] applicationFrame].size.width; //self.view.bounds.size.width;
+    float viewHeight = [[UIScreen mainScreen] applicationFrame].size.height; //self.view.bounds.size.height;
     
     // back button 
     if (!backButton) {
@@ -108,10 +108,11 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
                                                  IS_PAD()? 64.:48., 
                                                  IS_PAD() ? 64.:48.);
         backButton.userInteractionEnabled = YES;
-        [backButton addTarget:self action:@selector(backToHome) forControlEvents:UIControlEventTouchUpInside];
-        [cameraView addSubview:backButton];
+        [backButton addTarget:self action:@selector(backToHome) forControlEvents:UIControlEventAllEvents];
 
     }
+
+    [cameraView addSubview:backButton];
 
     
     // swich of front/back camera 
@@ -123,15 +124,16 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
                                                  GAP_Y/2 , 
                                                  IS_PAD()? 64.:48., 
                                                  IS_PAD() ? 64.:48.);
-        [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchUpInside];
+        [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventAllEvents];
     }
     [cameraView addSubview:switchFrontBackButton];
-    
+
     // slider
     if (!filterSettingsSlider) {
         filterSettingsSlider = [[UISlider alloc] initWithFrame:CGRectMake(viewWidth*0.1,
                                                                           IS_PAD()? viewHeight*0.8 : viewHeight*.7, 
-                                                                          viewWidth *.8, viewHeight * .1)];
+                                                                          viewWidth *.8, 
+                                                                          viewHeight * .1)];
         
         [filterSettingsSlider setThumbTintColor:[UIColor orangeColor]];
         [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
@@ -143,18 +145,17 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         filterSettingsSlider.value = 1.0; 
     }
     [cameraView addSubview:filterSettingsSlider];
-    
+
     //time label for recording 
     if (!timingLabel) {
-        timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth - 200.0, 10., 180.0, 20.)];
+        timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth/2, 10., viewWidth/2, 20.)];
         timingLabel.backgroundColor = [UIColor clearColor];
         timingLabel.textColor = [UIColor redColor];
-        timingLabel.textAlignment = UITextAlignmentRight;
+        timingLabel.textAlignment = UITextAlignmentLeft;
         timingLabel.hidden = YES;
- 
     }
     [cameraView addSubview:timingLabel];
-    
+
     
     //Bottom controller panel 
     CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - 60.0, 
@@ -203,9 +204,9 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
         [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
         photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventAllTouchEvents];
+        [bottomControlPanel addSubview:photoCaptureButton];
     }
-    [bottomControlPanel addSubview:photoCaptureButton];
 
     
     // switch from photo and video 
@@ -243,7 +244,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     [UIView animateWithDuration:1.0 animations:^{
         _originalFrame = touchedView.frame;
-        touchedView.frame = self.view.bounds;
+        cameraView.frame = self.view.bounds;
         
         DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
         
