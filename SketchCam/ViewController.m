@@ -49,7 +49,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     UIView *whiteFlashView ;
     UIView *bottomControlPanel;
     UIPopoverController *popoverCtr;
-    BOOL            captureStillImage;
+    BOOL            captureStillImageMode;
     BOOL            isRecording;
     NSTimer         *recordTimer;
     GPUImageMovieWriter* movieWriter;
@@ -66,6 +66,9 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     GPUImageShowcaseFilterType  _filterType;
     __unsafe_unretained UISlider *_filterSettingsSlider;
     BOOL                        isUsingFrontFacingCamera;
+    
+    NSMutableArray  *subViewsArray;
+    NSMutableArray  *subViewFilterArray;
     
 }
 
@@ -124,7 +127,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
                                                  GAP_Y/2 , 
                                                  IS_PAD()? 64.:48., 
                                                  IS_PAD() ? 64.:48.);
-        [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventAllEvents];
+        [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchDown];
     }
     [cameraView addSubview:switchFrontBackButton];
 
@@ -139,13 +142,14 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
         [filterSettingsSlider setBackgroundColor:[UIColor clearColor]];
         [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
-        filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        //filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         filterSettingsSlider.minimumValue = 0.0;
         filterSettingsSlider.maximumValue = 3.0;
         filterSettingsSlider.value = 1.0; 
     }
     [cameraView addSubview:filterSettingsSlider];
-
+    DLog(@"slider %@",NSStringFromCGRect(filterSettingsSlider.frame));
+    
     //time label for recording 
     if (!timingLabel) {
         timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth/2, 10., viewWidth/2, 20.)];
@@ -204,7 +208,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
         [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
         photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventAllTouchEvents];
+        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchDown];
         [bottomControlPanel addSubview:photoCaptureButton];
     }
 
@@ -238,12 +242,9 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
 
 - (void) viewEnterFullScreen:(UIView*)view{
-    
-    UIView *touchedView = view;
-    cameraView = touchedView;
-    
+        
     [UIView animateWithDuration:1.0 animations:^{
-        _originalFrame = touchedView.frame;
+        _originalFrame = view.frame;
         cameraView.frame = self.view.bounds;
         
         DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
@@ -301,11 +302,19 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
         _isTapped = YES;
         
-        UIView *tapView = [gesture view];
+        CGPoint tapPoint = [gesture locationInView:self.view];
+        int x = (int)floorf(tapPoint.x /(self.view.frame.size.width/ROWS));
+        int y = (int)floorf(tapPoint.y /(self.view.frame.size.height/COLS));
+        int filterIndex = y*ROWS + x;
+        DLog(@"tap filter %d", filterIndex);
+        filter = [subViewFilterArray objectAtIndex:filterIndex];
         
-        [self.view bringSubviewToFront:tapView];
+        cameraView = [gesture view];      
+        
+        
+        [self.view bringSubviewToFront:cameraView];
 
-        [self viewEnterFullScreen:tapView];
+        [self viewEnterFullScreen:cameraView];
         
     }
 }
@@ -326,15 +335,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-    //    filter = [[GPUImageSketchFilter alloc] init];
-    //
-    //	[filter prepareForImageCapture];
-    //    
-    //    [stillCamera addTarget:filter];
-    //    GPUImageView *filterView = (GPUImageView *)cameraView;
-    //    [filter addTarget:filterView];
-    
-    
+        
     CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	
     CGFloat subViewWidth = roundf(mainScreenFrame.size.width/ ROWS );
     CGFloat subViewHeight = roundf(mainScreenFrame.size.height/ COLS );
@@ -346,7 +347,17 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
             GPUImageView *subView = [[GPUImageView alloc ] initWithFrame:CGRectMake(j*subViewWidth, i*subViewHeight, subViewWidth, subViewHeight)];
             [self.view addSubview:subView];
             
+            if (!subViewsArray) {
+                subViewsArray = [NSMutableArray array];
+            }
+            [subViewsArray addObject:subView];
+            
             GPUImageFilter *subFilter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter:_pageIndex * ROWS *COLS + ROWS*i + j];
+            if (!subViewFilterArray) {
+                subViewFilterArray = [NSMutableArray array];
+            }
+            [subViewFilterArray addObject:subFilter];
+            
             [subFilter forceProcessingAtSize:subView.sizeInPixels];
             [stillCamera addTarget:subFilter];
             [subFilter addTarget:subView];
@@ -380,7 +391,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 	// Do any additional setup after loading the view, typically from a nib.
     [self createSubCameraViewsWithCamera:AVCaptureDevicePositionBack];
 
-    captureStillImage = YES;
+    captureStillImageMode = YES;
     isRecording = NO;
     [stillCamera startCameraCapture];
     
@@ -486,17 +497,17 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 }
 
 - (void) switchVideo:(id)sender{
-    captureStillImage = !captureStillImage;
+    captureStillImageMode = !captureStillImageMode;
     
     CATransition *animation = [CATransition animation];
     animation.delegate = self;
     animation.duration = 1.0;
     animation.timingFunction = UIViewAnimationCurveEaseInOut;
-    animation.type = captureStillImage ? @"fromRight" : @"fromLeft";
+    animation.type = captureStillImageMode ? @"fromRight" : @"fromLeft";
     animation.type = @"flip";
     [photoCaptureButton.layer addAnimation:animation forKey:@"image"];
     
-    if (!captureStillImage) {
+    if (!captureStillImageMode) {
         [photoCaptureButton setImage:[UIImage imageNamed:kVideoStartRecordImage] forState:UIControlStateNormal];
     }else {
         [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
@@ -521,6 +532,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
  */
 - (void)takePhoto:(id)sender;
 {
+    DLog(@"%@",sender);
     // IN APP PURCHASE 
     
     //    id valueOfTimes = [[NSUserDefaults standardUserDefaults] objectForKey:@"usedTimes"];
@@ -547,21 +559,29 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     //        }];
     //    }
     
-    if (!captureStillImage) {
+    if (!captureStillImageMode) {
         return [self recordVideo];     
     }
     
     [photoCaptureButton setEnabled:NO];
     
     //simulate white flash 
-    [UIView animateWithDuration:.3 animations:^{
-        whiteFlashView.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.2 animations:^{
-            whiteFlashView.alpha = 0;
-        }];
-    }];
-    
+//    [UIView animateWithDuration:.3 animations:^{
+//        whiteFlashView.alpha = 1.0;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.2 animations:^{
+//            whiteFlashView.alpha = 0;
+//        }];
+//    }];
+//    
+   // filter = [[GPUImageSketchFilter alloc] init];
+    //
+    //	[filter prepareForImageCapture];
+    //    
+    //    [stillCamera addTarget:filter];
+    //    GPUImageView *filterView = (GPUImageView *)cameraView;
+    //    [filter addTarget:filterView];
+
     
     [stillCamera capturePhotoAsJPEGProcessedUpToFilter:filter withCompletionHandler:^(NSData *processedJPEG, NSError *error){
         
