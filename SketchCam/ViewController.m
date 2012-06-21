@@ -29,7 +29,8 @@
 #define BOTTOM_SWITCH_WIDTH         ((IS_PAD()) ? 80.0 : 60.)
 #define BOTTOM_SWITCH_HEIGHT        ((IS_PAD()) ? 20.0 : 15.)
 
-static NSString *kStillCaptureImage = @"camera1@96.png";
+static NSString *kSwitchFrontBackCamImage = @"button_blue_repeat@128.png";
+static NSString *kStillCaptureImage = @"camera.png";
 static NSString *kVideoStartRecordImage = @"media_record.png";
 static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
@@ -84,13 +85,26 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 #define COLS    3
 
 - (void) hideFullScreenUI:(BOOL)hidden{
-    
-    filterSettingsSlider.hidden = hidden;
-    timingLabel.hidden = hidden;
-    photoCaptureButton.hidden = hidden;
-    bottomControlPanel.hidden = hidden;
-    backButton.hidden = hidden;
-    switchFrontBackButton.hidden = hidden;
+
+    [UIView animateWithDuration:1.0 animations:^{
+        if (hidden) {
+            filterSettingsSlider.alpha = 0.0;
+            timingLabel.alpha = 0;
+            photoCaptureButton.alpha = 0;
+            bottomControlPanel.alpha =0;
+            backButton.alpha =0;
+            switchFrontBackButton.alpha = 0;
+        }else {
+            filterSettingsSlider.alpha = 1.0;
+            timingLabel.alpha = 1;
+            photoCaptureButton.alpha = 1;
+            bottomControlPanel.alpha =1;
+            backButton.alpha =1;
+            switchFrontBackButton.alpha = 1;
+            
+        }
+
+    }];
     
 }
 
@@ -121,7 +135,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     // swich of front/back camera 
     if (!switchFrontBackButton) {
         switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [switchFrontBackButton setImage:[UIImage imageNamed:@"camera@72.png"] forState:UIControlStateNormal];
+        [switchFrontBackButton setImage:[UIImage imageNamed:kSwitchFrontBackCamImage] forState:UIControlStateNormal];
         
         switchFrontBackButton.frame = CGRectMake(viewWidth - 64. - GAP_X/2 , 
                                                  GAP_Y/2 , 
@@ -142,7 +156,6 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         [filterSettingsSlider setMinimumTrackTintColor:[UIColor orangeColor]];
         [filterSettingsSlider setBackgroundColor:[UIColor clearColor]];
         [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
-        //filterSettingsSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         filterSettingsSlider.minimumValue = 0.0;
         filterSettingsSlider.maximumValue = 3.0;
         filterSettingsSlider.value = 1.0; 
@@ -152,7 +165,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
     //time label for recording 
     if (!timingLabel) {
-        timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth/2, 10., viewWidth/2, 20.)];
+        timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth/3, GAP_Y, viewWidth/2, 20.)];
         timingLabel.backgroundColor = [UIColor clearColor];
         timingLabel.textColor = [UIColor redColor];
         timingLabel.textAlignment = UITextAlignmentLeft;
@@ -201,13 +214,13 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     //capture button
     if (!photoCaptureButton) {
         photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
+        //DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
 
         photoCaptureButton.frame = CGRectMake(viewWidth/2 - TAKE_PIC_BTN_WIDTH/2, 
-                                              GAP_Y/2, TAKE_PIC_BTN_WIDTH, TAKE_PIC_BTN_HEIGHT);
+                                              3.0, TAKE_PIC_BTN_WIDTH, TAKE_PIC_BTN_HEIGHT);
         DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
         [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
-        photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        //photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchDown];
         [bottomControlPanel addSubview:photoCaptureButton];
     }
@@ -221,7 +234,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
                                                                       MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
         [photoSwitchVideo setOnTintColor:[UIColor redColor]];
         photoSwitchVideo.backgroundColor = [UIColor clearColor];
-        [photoSwitchVideo addTarget:self action:@selector(switchVideo:) forControlEvents:UIControlEventTouchUpInside];
+        [photoSwitchVideo addTarget:self action:@selector(switchPhotoBetweenRecord:) forControlEvents:UIControlEventTouchUpInside];
         [bottomControlPanel addSubview:photoSwitchVideo];
         
     }
@@ -231,13 +244,10 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     [cameraView addSubview:bottomControlPanel];
     
     //white flash screen
-    //    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
-    //    whiteFlashView.backgroundColor = [UIColor whiteColor];
-    //    whiteFlashView.alpha = 0;
-    //    [cameraView addSubview:whiteFlashView];
-    //    [self.view addSubview:cameraView];
-    
-    //self.view = cameraView;	
+    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
+    whiteFlashView.backgroundColor = [UIColor whiteColor];
+    whiteFlashView.alpha = 0;
+    [cameraView addSubview:whiteFlashView];
 }
 
 
@@ -279,21 +289,21 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     
 }
 
-
-- (void) onPinch:(UIPinchGestureRecognizer*)gesture{
-    
-    [self.view bringSubviewToFront:gesture.view];
-    
-    float scale = [gesture scale];
-    
-    if ([gesture state] == UIGestureRecognizerStateEnded ) {
-        if (scale > 1.0 && !_viewIsFullScreenMode) {
-            [self viewEnterFullScreen:gesture.view];
-        }else if( scale < 1.0 && _viewIsFullScreenMode ) {
-            [self viewLeaveFullScreen:gesture.view];
-        }
-    }
-}
+//
+//- (void) onPinch:(UIPinchGestureRecognizer*)gesture{
+//    
+//    [self.view bringSubviewToFront:gesture.view];
+//    
+//    float scale = [gesture scale];
+//    
+//    if ([gesture state] == UIGestureRecognizerStateEnded ) {
+//        if (scale > 1.0 && !_viewIsFullScreenMode) {
+//            [self viewEnterFullScreen:gesture.view];
+//        }else if( scale < 1.0 && _viewIsFullScreenMode ) {
+//            [self viewLeaveFullScreen:gesture.view];
+//        }
+//    }
+//}
 
 
 - (void) onTap:(UITapGestureRecognizer*)gesture{
@@ -307,9 +317,10 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
         int y = (int)floorf(tapPoint.y /(self.view.frame.size.height/COLS));
         int filterIndex = y*ROWS + x;
         DLog(@"tap filter %d", filterIndex);
+        _filterType = filterIndex;  
         filter = [subViewFilterArray objectAtIndex:filterIndex];
         
-        cameraView = [gesture view];      
+        cameraView = (GPUImageView*)[gesture view];      
         
         
         [self.view bringSubviewToFront:cameraView];
@@ -374,10 +385,10 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
             //DLog(@"count %d subview %@", count++ , subView );
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
             
-            UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinch:)];
+            //UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinch:)];
             
             [subView addGestureRecognizer:tapGesture ];
-            [subView addGestureRecognizer:pinchGesture];
+            //[subView addGestureRecognizer:pinchGesture];
             
         }
     }
@@ -488,15 +499,15 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     animation.delegate = self;
     animation.duration = 1.0;
     animation.timingFunction = UIViewAnimationCurveEaseInOut;
-    //animation.type = @"cameraIris";
-    animation.type = @"flip";
-    animation.subtype = @"fromLeft";
+    animation.type = @"cameraIris";
+    //animation.type = @"flip";
+    //animation.subtype = @"fromLeft";
     [cameraView.layer addAnimation:animation forKey:nil];
     
     [stillCamera rotateCamera];
 }
 
-- (void) switchVideo:(id)sender{
+- (void) switchPhotoBetweenRecord:(id)sender{
     captureStillImageMode = !captureStillImageMode;
     
     CATransition *animation = [CATransition animation];
@@ -514,14 +525,6 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     }
 }
 
-
-- (void)updateSliderValue:(id)sender
-{
-    float value = [(UISlider*)sender value] ;
-    [(GPUImageSketchFilter *)filter setTexelHeight:(value / 480.0)];
-    [(GPUImageSketchFilter *)filter setTexelWidth:(value / 360.0)];
-    
-}
 
 #define FREETIMES_LIMITATION  2 
 #define kMyProduct @"com.dfa.sketchcam.takephoto"
@@ -566,22 +569,13 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     [photoCaptureButton setEnabled:NO];
     
     //simulate white flash 
-//    [UIView animateWithDuration:.3 animations:^{
-//        whiteFlashView.alpha = 1.0;
-//    } completion:^(BOOL finished) {
-//        [UIView animateWithDuration:0.2 animations:^{
-//            whiteFlashView.alpha = 0;
-//        }];
-//    }];
-//    
-   // filter = [[GPUImageSketchFilter alloc] init];
-    //
-    //	[filter prepareForImageCapture];
-    //    
-    //    [stillCamera addTarget:filter];
-    //    GPUImageView *filterView = (GPUImageView *)cameraView;
-    //    [filter addTarget:filterView];
-
+    [UIView animateWithDuration:.3 animations:^{
+        whiteFlashView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2 animations:^{
+            whiteFlashView.alpha = 0;
+        }];
+    }];
     
     [stillCamera capturePhotoAsJPEGProcessedUpToFilter:filter withCompletionHandler:^(NSData *processedJPEG, NSError *error){
         
@@ -730,5 +724,86 @@ long recordingSeconds = 0;
     });
     
 }
+
+#pragma mark -
+#pragma mark Filter adjustments
+
+
+- (void)updateSliderValue:(id)sender;
+{
+    switch(_filterType)
+    {
+        case GPUIMAGE_SKETCH:
+        {
+            float value = [(UISlider*)sender value] ;
+            [(GPUImageSketchFilter *)filter setTexelHeight:(value / 480.0)];
+            [(GPUImageSketchFilter *)filter setTexelWidth:(value / 360.0)];
+            break;
+        } 
+        case GPUIMAGE_SEPIA: [(GPUImageSepiaFilter *)filter setIntensity:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_PIXELLATE: [(GPUImagePixellateFilter *)filter setFractionalWidthOfAPixel:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_POLARPIXELLATE: [(GPUImagePolarPixellateFilter *)filter setPixelSize:CGSizeMake([(UISlider *)sender value], [(UISlider *)sender value])]; break;
+        case GPUIMAGE_SATURATION: [(GPUImageSaturationFilter *)filter setSaturation:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_CONTRAST: [(GPUImageContrastFilter *)filter setContrast:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_BRIGHTNESS: [(GPUImageBrightnessFilter *)filter setBrightness:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_EXPOSURE: [(GPUImageExposureFilter *)filter setExposure:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_RGB: [(GPUImageRGBFilter *)filter setGreen:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_SHARPEN: [(GPUImageSharpenFilter *)filter setSharpness:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_HISTOGRAM: [(GPUImageHistogramFilter *)filter setDownsamplingFactor:round([(UISlider *)sender value])]; break;
+        case GPUIMAGE_UNSHARPMASK: [(GPUImageUnsharpMaskFilter *)filter setIntensity:[(UISlider *)sender value]]; break;
+            //        case GPUIMAGE_UNSHARPMASK: [(GPUImageUnsharpMaskFilter *)filter setBlurSize:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_GAMMA: [(GPUImageGammaFilter *)filter setGamma:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_CROSSHATCH: [(GPUImageCrosshatchFilter *)filter setCrossHatchSpacing:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_POSTERIZE: [(GPUImagePosterizeFilter *)filter setColorLevels:round([(UISlider*)sender value])]; break;
+		case GPUIMAGE_HAZE: [(GPUImageHazeFilter *)filter setDistance:[(UISlider *)sender value]]; break;
+		case GPUIMAGE_THRESHOLD: [(GPUImageLuminanceThresholdFilter *)filter setThreshold:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_ADAPTIVETHRESHOLD: [(GPUImageAdaptiveThresholdFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_DISSOLVE: [(GPUImageDissolveBlendFilter *)filter setMix:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_CHROMAKEY: [(GPUImageChromaKeyBlendFilter *)filter setThresholdSensitivity:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_KUWAHARA: [(GPUImageKuwaharaFilter *)filter setRadius:round([(UISlider *)sender value])]; break;
+        case GPUIMAGE_SWIRL: [(GPUImageSwirlFilter *)filter setAngle:[(UISlider *)sender value]/16.]; break;
+        case GPUIMAGE_EMBOSS: [(GPUImageEmbossFilter *)filter setIntensity:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_CANNYEDGEDETECTION: [(GPUImageCannyEdgeDetectionFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+            //        case GPUIMAGE_CANNYEDGEDETECTION: [(GPUImageCannyEdgeDetectionFilter *)filter setLowerThreshold:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_HARRISCORNERDETECTION: [(GPUImageHarrisCornerDetectionFilter *)filter setThreshold:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_NOBLECORNERDETECTION: [(GPUImageNobleCornerDetectionFilter *)filter setThreshold:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_SHITOMASIFEATUREDETECTION: [(GPUImageShiTomasiFeatureDetectionFilter *)filter setThreshold:[(UISlider*)sender value]]; break;
+            //        case GPUIMAGE_HARRISCORNERDETECTION: [(GPUImageHarrisCornerDetectionFilter *)filter setSensitivity:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_SMOOTHTOON: [(GPUImageSmoothToonFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+            //        case GPUIMAGE_BULGE: [(GPUImageBulgeDistortionFilter *)filter setRadius:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_BULGE: [(GPUImageBulgeDistortionFilter *)filter setScale:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_TONECURVE: [(GPUImageToneCurveFilter *)filter setBlueControlPoints:[NSArray arrayWithObjects:[NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)], [NSValue valueWithCGPoint:CGPointMake(0.5, [(UISlider *)sender value])], [NSValue valueWithCGPoint:CGPointMake(1.0, 0.75)], nil]]; break;
+        case GPUIMAGE_PINCH: [(GPUImagePinchDistortionFilter *)filter setScale:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_PERLINNOISE:  [(GPUImagePerlinNoiseFilter *)filter setScale:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_MOSAIC:  [(GPUImageMosaicFilter *)filter setDisplayTileSize:CGSizeMake([(UISlider *)sender value], [(UISlider *)sender value])]; break;
+        case GPUIMAGE_VIGNETTE: [(GPUImageVignetteFilter *)filter setVignetteEnd:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_GAUSSIAN: [(GPUImageGaussianBlurFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_BILATERAL: [(GPUImageBilateralFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_FASTBLUR: [(GPUImageFastBlurFilter *)filter setBlurPasses:round([(UISlider*)sender value])]; break;
+            //        case GPUIMAGE_FASTBLUR: [(GPUImageFastBlurFilter *)filter setBlurSize:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_GAUSSIAN_SELECTIVE: [(GPUImageGaussianSelectiveBlurFilter *)filter setExcludeCircleRadius:[(UISlider*)sender value]]; break;
+        case GPUIMAGE_FILTERGROUP: [(GPUImagePixellateFilter *)[(GPUImageFilterGroup *)filter filterAtIndex:1] setFractionalWidthOfAPixel:[(UISlider *)sender value]]; break;
+        case GPUIMAGE_CROP: [(GPUImageCropFilter *)filter setCropRegion:CGRectMake(0.0, 0.0, 1.0, [(UISlider*)sender value])]; break;
+        case GPUIMAGE_TRANSFORM: [(GPUImageTransformFilter *)filter setAffineTransform:CGAffineTransformMakeRotation([(UISlider*)sender value])]; break;
+        case GPUIMAGE_TRANSFORM3D:
+        {
+            CATransform3D perspectiveTransform = CATransform3DIdentity;
+            perspectiveTransform.m34 = 0.4;
+            perspectiveTransform.m33 = 0.4;
+            perspectiveTransform = CATransform3DScale(perspectiveTransform, 0.75, 0.75, 0.75);
+            perspectiveTransform = CATransform3DRotate(perspectiveTransform, [(UISlider*)sender value], 0.0, 1.0, 0.0);
+            
+            [(GPUImageTransformFilter *)filter setTransform3D:perspectiveTransform];            
+        }; break;
+        case GPUIMAGE_TILTSHIFT:
+        {
+            CGFloat midpoint = [(UISlider *)sender value];
+            [(GPUImageTiltShiftFilter *)filter setTopFocusLevel:midpoint - 0.1];
+            [(GPUImageTiltShiftFilter *)filter setBottomFocusLevel:midpoint + 0.1];
+        }; break;
+        default: break;
+    }
+}
+
 
 @end
