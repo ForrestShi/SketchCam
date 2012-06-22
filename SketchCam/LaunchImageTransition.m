@@ -15,6 +15,11 @@
 	self = [super init];
 	
 	if (self) {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
+        
+
+        
 		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 		
 		NSString *launchImageFile = [infoDictionary objectForKey:@"UILaunchImageFile"];
@@ -26,7 +31,9 @@
 		} else if (launchImageFileiPhone != nil) {
 			[self.view addSubview:[[[UIImageView alloc] initWithImage:[UIImage imageNamed:launchImageFileiPhone]] autorelease]];
 		} else {
-			[self.view addSubview:[[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default.png"]] autorelease]];
+            UIImageView *imgView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default.png"]] autorelease];
+            imgView.frame = self.view.bounds;
+			[self.view addSubview:imgView];
 		}
 		
 		[controller setModalTransitionStyle:transition];
