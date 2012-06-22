@@ -525,9 +525,6 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
     }
 }
 
-
-#define FREETIMES_LIMITATION  2 
-#define kMyProduct @"com.dfa.sketchcam.takephoto"
 /*
  
  ISSUE: For the iPad2, there are some random noise when capturing photo 
@@ -535,32 +532,6 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
  */
 - (void)takePhoto:(id)sender;
 {
-    DLog(@"%@",sender);
-    // IN APP PURCHASE 
-    
-    //    id valueOfTimes = [[NSUserDefaults standardUserDefaults] objectForKey:@"usedTimes"];
-    //    if (valueOfTimes == nil) {
-    //        usedTimesOfCapture = 0;
-    //    }else {
-    //        usedTimesOfCapture = [valueOfTimes intValue];
-    //    }
-    //    
-    //    usedTimesOfCapture++;
-    //    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:usedTimesOfCapture] forKey:@"usedTimes"];
-    //    [[NSUserDefaults standardUserDefaults] synchronize];
-    //
-    //    
-    //    DLog(@"used times %d",usedTimesOfCapture);
-    //    
-    //    if (usedTimesOfCapture > FREETIMES_LIMITATION ) {
-    //        [[MKStoreManager sharedManager] buyFeature:kMyProduct onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt) {
-    //            //
-    //            DLog(@"DEBUG %@ %@", purchasedFeature, purchasedReceipt);
-    //        } onCancelled:^{
-    //            //
-    //            DLog(@"DEBUG");
-    //        }];
-    //    }
     
     if (!captureStillImageMode) {
         return [self recordVideo];     
