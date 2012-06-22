@@ -33,6 +33,8 @@ static NSString *kSwitchFrontBackCamImage = @"button_blue_repeat@128.png";
 static NSString *kStillCaptureImage = @"camera.png";
 static NSString *kVideoStartRecordImage = @"media_record.png";
 static NSString *kVideoStopRecordImage = @"button_stop_red.png";
+static NSString *kBottomPanelTextureImage = @"fether.jpeg";
+
 
 @interface ViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
@@ -183,7 +185,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 
         bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
         
-        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood.jpg"]];
+        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
         bottomControlPanel.layer.cornerRadius = 10.0;
         bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
         bottomControlPanel.layer.shadowOpacity = 0.5;
