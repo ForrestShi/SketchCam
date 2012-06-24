@@ -4,14 +4,48 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>SketchCam.xcscheme</key>
+		<key>ArtCam.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>FunCam.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
+		<key>SepiaCam.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>Sketcam.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>189A16F51597200F009D6E89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>189A174A15972846009D6E89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>189A179F159729A3009D6E89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>189EBF2E158C508A00DF177C</key>
 		<dict>
 			<key>primary</key>

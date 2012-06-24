@@ -117,6 +117,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     float viewWidth = [[UIScreen mainScreen] applicationFrame].size.width; //self.view.bounds.size.width;
     float viewHeight = [[UIScreen mainScreen] applicationFrame].size.height; //self.view.bounds.size.height;
     
+#ifdef ARTCAM
     // back button 
     if (!backButton) {
         backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -133,6 +134,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
     [cameraView addSubview:backButton];
 
+#endif
     
     // swich of front/back camera 
     if (!switchFrontBackButton) {
@@ -176,10 +178,11 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     [cameraView addSubview:timingLabel];
 
     
+    
     //Bottom controller panel 
-    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - 60.0, 
+    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 90.0 : 60.), 
                                                 self.view.bounds.size.width,
-                                                60.);
+                                                IS_PAD()? 90.0 : 60.);
 
     if (!bottomControlPanel) {
 
@@ -291,22 +294,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
 }
 
-//
-//- (void) onPinch:(UIPinchGestureRecognizer*)gesture{
-//    
-//    [self.view bringSubviewToFront:gesture.view];
-//    
-//    float scale = [gesture scale];
-//    
-//    if ([gesture state] == UIGestureRecognizerStateEnded ) {
-//        if (scale > 1.0 && !_viewIsFullScreenMode) {
-//            [self viewEnterFullScreen:gesture.view];
-//        }else if( scale < 1.0 && _viewIsFullScreenMode ) {
-//            [self viewLeaveFullScreen:gesture.view];
-//        }
-//    }
-//}
-
 
 - (void) onTap:(UITapGestureRecognizer*)gesture{
 
@@ -397,13 +384,51 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
 }
 
+- (void) createFilterCameraViewWithCamera:(AVCaptureDevicePosition)devicePosition{
+    
+    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	    captureSessionSetup = AVCaptureSessionPresetPhoto;
+    
+    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    
+    CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	    
+    cameraView = [[GPUImageView alloc ] initWithFrame:mainScreenFrame];
+        
+    filter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter: _filterType ];
+
+    [filter forceProcessingAtSize:cameraView.sizeInPixels];
+    [stillCamera addTarget:filter];
+    [filter addTarget:cameraView];
+   
+    [self.view addSubview:cameraView];
+    
+    [self createFullScreenUI];
+
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+#ifdef ARTCAM
+    
     [self createSubCameraViewsWithCamera:AVCaptureDevicePositionBack];
-
+    
+#elif SKETCHCAM
+    _filterType = GPUIMAGE_SKETCH;
+    [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
+ 
+#elif SEPIACAM
+    _filterType = GPUIMAGE_SEPIA;
+    [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
+#elif FUNCAM
+    _filterType = GPUIMAGE_BULGE;
+    [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
+    
+#endif
     captureStillImageMode = YES;
     isRecording = NO;
     [stillCamera startCameraCapture];
