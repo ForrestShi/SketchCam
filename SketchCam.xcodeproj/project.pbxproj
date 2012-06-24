@@ -165,7 +165,6 @@
 		189EBFB8158CBB0100DF177C /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "vendor/mkstorekit/Externals/NSData+Base64.m"; sourceTree = "<group>"; };
 		189EBFB9158CBB0100DF177C /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFHFKeychainUtils.h; path = vendor/mkstorekit/Externals/SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		189EBFBA158CBB0100DF177C /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFHFKeychainUtils.m; path = vendor/mkstorekit/Externals/SFHFKeychainUtils.m; sourceTree = "<group>"; };
-		189EBFCA158CE0C600DF177C /* sketchcam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = sketchcam.entitlements; path = sketchcam/sketchcam.entitlements; sourceTree = "<group>"; };
 		189EBFCB158D965200DF177C /* camera1@96.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera1@96.png"; sourceTree = "<group>"; };
 		189EBFCC158D965200DF177C /* camera1@128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera1@128.png"; sourceTree = "<group>"; };
 		189EBFCD158D965200DF177C /* button_grey_rec@48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_grey_rec@48.png"; sourceTree = "<group>"; };
@@ -244,7 +243,6 @@
 				18919BFF15946BF70067B1CE /* Icon-Small@2x.png */,
 				18919C0015946BF70067B1CE /* Icon.png */,
 				18919C0115946BF70067B1CE /* Icon@2x.png */,
-				189EBFCA158CE0C600DF177C /* sketchcam.entitlements */,
 				189EBFA9158CB8DC00DF177C /* MKStoreKit */,
 				189EBF39158C508A00DF177C /* SketchCam */,
 				189EBF32158C508A00DF177C /* Frameworks */,

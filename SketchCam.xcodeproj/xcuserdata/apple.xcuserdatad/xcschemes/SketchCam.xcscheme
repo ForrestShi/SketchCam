@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "189EBF2E158C508A00DF177C"
-               BuildableName = "sketchcam.app"
+               BuildableName = "ArtCam.app"
                BlueprintName = "ArtCam"
                ReferencedContainer = "container:SketchCam.xcodeproj">
             </BuildableReference>
@@ -32,7 +32,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "189EBF2E158C508A00DF177C"
-            BuildableName = "sketchcam.app"
+            BuildableName = "ArtCam.app"
             BlueprintName = "ArtCam"
             ReferencedContainer = "container:SketchCam.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "189EBF2E158C508A00DF177C"
-            BuildableName = "sketchcam.app"
+            BuildableName = "ArtCam.app"
             BlueprintName = "ArtCam"
             ReferencedContainer = "container:SketchCam.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "189EBF2E158C508A00DF177C"
-            BuildableName = "sketchcam.app"
+            BuildableName = "ArtCam.app"
             BlueprintName = "ArtCam"
             ReferencedContainer = "container:SketchCam.xcodeproj">
          </BuildableReference>
