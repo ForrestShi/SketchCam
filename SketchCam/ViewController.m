@@ -140,7 +140,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [switchFrontBackButton setImage:[UIImage imageNamed:kSwitchFrontBackCamImage] forState:UIControlStateNormal];
         
-        switchFrontBackButton.frame = CGRectMake(viewWidth - 64. - GAP_X/2 , 
+        switchFrontBackButton.frame = CGRectMake(viewWidth - (IS_PAD()? 64.:48.) - GAP_X/2 , 
                                                  GAP_Y/2 , 
                                                  IS_PAD()? 64.:48., 
                                                  IS_PAD() ? 64.:48.);
@@ -179,9 +179,9 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     
     //Bottom controller panel 
-    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 90.0 : 60.), 
+    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
                                                 self.view.bounds.size.width,
-                                                IS_PAD()? 90.0 : 60.);
+                                                IS_PAD()? 80.0 : 60.);
 
     if (!bottomControlPanel) {
 
@@ -392,8 +392,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     
-    CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	
-    DLog(@"mainscreen frame %@ self.view %@",NSStringFromCGRect(mainScreenFrame) , NSStringFromCGRect(self.view.bounds));
     cameraView = [[GPUImageView alloc ] initWithFrame:self.view.bounds];
     cameraView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
         
@@ -425,6 +423,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 #elif SEPIACAM
     _filterType = GPUIMAGE_SEPIA;
     [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
+        
 #elif FUNCAM
     _filterType = GPUIMAGE_BULGE;
     [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
@@ -523,17 +522,27 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 // use front/back camera
 - (void)switchCameras:(id)sender
 {
+    
     CATransition *animation = [CATransition animation];
     animation.delegate = self;
-    animation.duration = 1.0;
+    animation.duration = .5;
     animation.timingFunction = UIViewAnimationCurveEaseInOut;
-    animation.type = @"cameraIris";
-    //animation.type = @"flip";
+    //animation.type = @"cameraIris";
+    animation.type = @"rippleEffect";
     //animation.subtype = @"fromLeft";
+    animation.removedOnCompletion = YES;
     [cameraView.layer addAnimation:animation forKey:nil];
     
     [stillCamera rotateCamera];
 }
+
+- (void) animationDidStart:(CAAnimation *)anim{
+    //[stillCamera rotateCamera];
+}
+- (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag{
+    //[stillCamera rotateCamera];
+}
+
 
 - (void) switchPhotoBetweenRecord:(id)sender{
     captureStillImageMode = !captureStillImageMode;
