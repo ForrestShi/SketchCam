@@ -60,7 +60,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     NSUInteger      usedTimesOfCapture;
     
-    __block BOOL                _atomicGestureUsedFlag;
     __block CGRect              _originalFrame;
     __block BOOL                _isTapped;
     __block BOOL                _viewIsFullScreenMode;
@@ -393,8 +392,10 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     
-    CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	    
-    cameraView = [[GPUImageView alloc ] initWithFrame:mainScreenFrame];
+    CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	
+    DLog(@"mainscreen frame %@ self.view %@",NSStringFromCGRect(mainScreenFrame) , NSStringFromCGRect(self.view.bounds));
+    cameraView = [[GPUImageView alloc ] initWithFrame:self.view.bounds];
+    cameraView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
         
     filter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter: _filterType ];
 

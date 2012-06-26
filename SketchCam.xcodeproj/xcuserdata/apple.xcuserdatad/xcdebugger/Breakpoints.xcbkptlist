@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SketchCam/ViewController.m"
-         timestampString = "362229565.243254"
+         timestampString = "362409864.245338"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "736"
-         endingLineNumber = "736"
+         startingLineNumber = "737"
+         endingLineNumber = "737"
          landmarkName = "-updateSliderValue:"
          landmarkType = "5">
       </FileBreakpoint>
