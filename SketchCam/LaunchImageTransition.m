@@ -8,7 +8,7 @@
 @implementation LaunchImageTransition
 
 - (id)initWithViewController:(UIViewController *)controller animation:(UIModalTransitionStyle)transition {
-	return [self initWithViewController:controller animation:transition delay:0.0];
+	return [self initWithViewController:controller animation:transition delay:.5];
 }
 
 - (id)initWithViewController:(UIViewController *)controller animation:(UIModalTransitionStyle)transition delay:(NSTimeInterval)seconds {

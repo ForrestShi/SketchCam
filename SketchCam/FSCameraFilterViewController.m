@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "FSCameraFilterViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MKStoreManager.h"
 #import "FSGPUImageFilterManager.h"
@@ -36,7 +36,7 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 
-@interface ViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
+@interface FSCameraFilterViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
     GPUImageOutput<GPUImageInput> *filter;
     
@@ -79,7 +79,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 @end
 
-@implementation ViewController
+@implementation FSCameraFilterViewController
 
 
 #define ROWS    3
@@ -116,7 +116,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     float viewWidth = [[UIScreen mainScreen] applicationFrame].size.width; //self.view.bounds.size.width;
     float viewHeight = [[UIScreen mainScreen] applicationFrame].size.height; //self.view.bounds.size.height;
     
-#ifdef ARTCAM
     // back button 
     if (!backButton) {
         backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -133,7 +132,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
     [cameraView addSubview:backButton];
 
-#endif
     
     // swich of front/back camera 
     if (!switchFrontBackButton) {
@@ -319,11 +317,21 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 }
 
 - (void) backToHome{
+
+#ifdef ARTCAM
     if (_isTapped) {
         [self viewLeaveFullScreen:cameraView];
         _isTapped = NO;
         _viewIsFullScreenMode = NO;
     }
+#else
+    
+    [stillCamera stopCameraCapture];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    
+#endif
 }
 
 - (void) createSubCameraViewsWithCamera:(AVCaptureDevicePosition)devicePosition{

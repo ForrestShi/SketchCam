@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "GPUImage.h"
 
-@interface ViewController : UIViewController
+@interface FSCameraFilterViewController : UIViewController
 
 @end

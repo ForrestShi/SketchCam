@@ -24,7 +24,7 @@
 		189A16FA1597200F009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A16FB1597200F009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
 		189A16FC1597200F009D6E89 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF43158C508A00DF177C /* AppDelegate.m */; };
-		189A16FD1597200F009D6E89 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* ViewController.m */; };
+		189A16FD1597200F009D6E89 /* FSCameraFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */; };
 		189A16FE1597200F009D6E89 /* MKStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF9F158CB8D300DF177C /* MKStoreManager.m */; };
 		189A16FF1597200F009D6E89 /* MKStoreObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFA1158CB8D300DF177C /* MKStoreObserver.m */; };
 		189A17001597200F009D6E89 /* MKSKProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFAF158CBAA500DF177C /* MKSKProduct.m */; };
@@ -88,7 +88,7 @@
 		189A174F15972846009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A175015972846009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
 		189A175115972846009D6E89 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF43158C508A00DF177C /* AppDelegate.m */; };
-		189A175215972846009D6E89 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* ViewController.m */; };
+		189A175215972846009D6E89 /* FSCameraFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */; };
 		189A175315972846009D6E89 /* MKStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF9F158CB8D300DF177C /* MKStoreManager.m */; };
 		189A175415972846009D6E89 /* MKStoreObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFA1158CB8D300DF177C /* MKStoreObserver.m */; };
 		189A175515972846009D6E89 /* MKSKProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFAF158CBAA500DF177C /* MKSKProduct.m */; };
@@ -152,7 +152,7 @@
 		189A17A4159729A3009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A17A5159729A3009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
 		189A17A6159729A3009D6E89 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF43158C508A00DF177C /* AppDelegate.m */; };
-		189A17A7159729A3009D6E89 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* ViewController.m */; };
+		189A17A7159729A3009D6E89 /* FSCameraFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */; };
 		189A17A8159729A3009D6E89 /* MKStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF9F158CB8D300DF177C /* MKStoreManager.m */; };
 		189A17A9159729A3009D6E89 /* MKStoreObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFA1158CB8D300DF177C /* MKStoreObserver.m */; };
 		189A17AA159729A3009D6E89 /* MKSKProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBFAF158CBAA500DF177C /* MKSKProduct.m */; };
@@ -212,13 +212,17 @@
 		189A17E2159729A3009D6E89 /* video_camera@256.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC231593200F000BC676 /* video_camera@256.png */; };
 		189A17E3159729A3009D6E89 /* fether.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC33159437B5000BC676 /* fether.jpeg */; };
 		189A17EA159729A3009D6E89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
+		189C5B88159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
+		189C5B89159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
+		189C5B8A159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
+		189C5B8B159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
 		189EBF34158C508A00DF177C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF33158C508A00DF177C /* UIKit.framework */; };
 		189EBF36158C508A00DF177C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF35158C508A00DF177C /* Foundation.framework */; };
 		189EBF38158C508A00DF177C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF37158C508A00DF177C /* CoreGraphics.framework */; };
 		189EBF3E158C508A00DF177C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 189EBF3C158C508A00DF177C /* InfoPlist.strings */; };
 		189EBF40158C508A00DF177C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
 		189EBF44158C508A00DF177C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF43158C508A00DF177C /* AppDelegate.m */; };
-		189EBF47158C508A00DF177C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* ViewController.m */; };
+		189EBF47158C508A00DF177C /* FSCameraFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */; };
 		189EBF61158C566E00DF177C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF60158C566E00DF177C /* CoreMedia.framework */; };
 		189EBF63158C567600DF177C /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF62158C567600DF177C /* CoreVideo.framework */; };
 		189EBF65158C567E00DF177C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF64158C567E00DF177C /* OpenGLES.framework */; };
@@ -340,6 +344,8 @@
 		189A179E15972847009D6E89 /* SepiaCam-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SepiaCam-Info.plist"; path = "/Users/apple/workspace/myApps/myApps2012/CamsApp/SketchCam/SepiaCam-Info.plist"; sourceTree = "<absolute>"; };
 		189A17F1159729A3009D6E89 /* SepiaCam copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SepiaCam copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		189A17F3159729A3009D6E89 /* FunCam-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FunCam-Info.plist"; path = "/Users/apple/workspace/myApps/myApps2012/CamsApp/SketchCam/FunCam-Info.plist"; sourceTree = "<absolute>"; };
+		189C5B86159C893C0098C80A /* FSHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSHomeViewController.h; sourceTree = "<group>"; };
+		189C5B87159C893C0098C80A /* FSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSHomeViewController.m; sourceTree = "<group>"; };
 		189EBF2F158C508A00DF177C /* ArtCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189EBF33158C508A00DF177C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		189EBF35158C508A00DF177C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -350,8 +356,8 @@
 		189EBF41158C508A00DF177C /* SketchCam-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SketchCam-Prefix.pch"; sourceTree = "<group>"; };
 		189EBF42158C508A00DF177C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		189EBF43158C508A00DF177C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		189EBF45158C508A00DF177C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		189EBF46158C508A00DF177C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		189EBF45158C508A00DF177C /* FSCameraFilterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSCameraFilterViewController.h; sourceTree = "<group>"; };
+		189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FSCameraFilterViewController.m; sourceTree = "<group>"; };
 		189EBF53158C564900DF177C /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = vendor/gpuimage/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
 		189EBF60158C566E00DF177C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		189EBF62158C567600DF177C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -575,12 +581,14 @@
 			children = (
 				18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */,
 				18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */,
+				189C5B86159C893C0098C80A /* FSHomeViewController.h */,
+				189C5B87159C893C0098C80A /* FSHomeViewController.m */,
+				189EBF45158C508A00DF177C /* FSCameraFilterViewController.h */,
+				189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */,
 				1888B27D158DFE2A00950C40 /* LaunchImageTransition.h */,
 				1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */,
 				189EBF42158C508A00DF177C /* AppDelegate.h */,
 				189EBF43158C508A00DF177C /* AppDelegate.m */,
-				189EBF45158C508A00DF177C /* ViewController.h */,
-				189EBF46158C508A00DF177C /* ViewController.m */,
 				189EBF3A158C508A00DF177C /* Supporting Files */,
 			);
 			path = SketchCam;
@@ -1008,7 +1016,7 @@
 				189A16FA1597200F009D6E89 /* LaunchImageTransition.m in Sources */,
 				189A16FB1597200F009D6E89 /* main.m in Sources */,
 				189A16FC1597200F009D6E89 /* AppDelegate.m in Sources */,
-				189A16FD1597200F009D6E89 /* ViewController.m in Sources */,
+				189A16FD1597200F009D6E89 /* FSCameraFilterViewController.m in Sources */,
 				189A16FE1597200F009D6E89 /* MKStoreManager.m in Sources */,
 				189A16FF1597200F009D6E89 /* MKStoreObserver.m in Sources */,
 				189A17001597200F009D6E89 /* MKSKProduct.m in Sources */,
@@ -1016,6 +1024,7 @@
 				189A17021597200F009D6E89 /* JSONKit.m in Sources */,
 				189A17031597200F009D6E89 /* NSData+Base64.m in Sources */,
 				189A17041597200F009D6E89 /* SFHFKeychainUtils.m in Sources */,
+				189C5B89159C893C0098C80A /* FSHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1027,7 +1036,7 @@
 				189A174F15972846009D6E89 /* LaunchImageTransition.m in Sources */,
 				189A175015972846009D6E89 /* main.m in Sources */,
 				189A175115972846009D6E89 /* AppDelegate.m in Sources */,
-				189A175215972846009D6E89 /* ViewController.m in Sources */,
+				189A175215972846009D6E89 /* FSCameraFilterViewController.m in Sources */,
 				189A175315972846009D6E89 /* MKStoreManager.m in Sources */,
 				189A175415972846009D6E89 /* MKStoreObserver.m in Sources */,
 				189A175515972846009D6E89 /* MKSKProduct.m in Sources */,
@@ -1035,6 +1044,7 @@
 				189A175715972846009D6E89 /* JSONKit.m in Sources */,
 				189A175815972846009D6E89 /* NSData+Base64.m in Sources */,
 				189A175915972846009D6E89 /* SFHFKeychainUtils.m in Sources */,
+				189C5B8A159C893C0098C80A /* FSHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1046,7 +1056,7 @@
 				189A17A4159729A3009D6E89 /* LaunchImageTransition.m in Sources */,
 				189A17A5159729A3009D6E89 /* main.m in Sources */,
 				189A17A6159729A3009D6E89 /* AppDelegate.m in Sources */,
-				189A17A7159729A3009D6E89 /* ViewController.m in Sources */,
+				189A17A7159729A3009D6E89 /* FSCameraFilterViewController.m in Sources */,
 				189A17A8159729A3009D6E89 /* MKStoreManager.m in Sources */,
 				189A17A9159729A3009D6E89 /* MKStoreObserver.m in Sources */,
 				189A17AA159729A3009D6E89 /* MKSKProduct.m in Sources */,
@@ -1054,6 +1064,7 @@
 				189A17AC159729A3009D6E89 /* JSONKit.m in Sources */,
 				189A17AD159729A3009D6E89 /* NSData+Base64.m in Sources */,
 				189A17AE159729A3009D6E89 /* SFHFKeychainUtils.m in Sources */,
+				189C5B8B159C893C0098C80A /* FSHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1065,7 +1076,7 @@
 				1888B27F158DFFBC00950C40 /* LaunchImageTransition.m in Sources */,
 				189EBF40158C508A00DF177C /* main.m in Sources */,
 				189EBF44158C508A00DF177C /* AppDelegate.m in Sources */,
-				189EBF47158C508A00DF177C /* ViewController.m in Sources */,
+				189EBF47158C508A00DF177C /* FSCameraFilterViewController.m in Sources */,
 				189EBFA6158CB8D300DF177C /* MKStoreManager.m in Sources */,
 				189EBFA7158CB8D300DF177C /* MKStoreObserver.m in Sources */,
 				189EBFB3158CBAA500DF177C /* MKSKProduct.m in Sources */,
@@ -1073,6 +1084,7 @@
 				189EBFBB158CBB0100DF177C /* JSONKit.m in Sources */,
 				189EBFBC158CBB0100DF177C /* NSData+Base64.m in Sources */,
 				189EBFBD158CBB0100DF177C /* SFHFKeychainUtils.m in Sources */,
+				189C5B88159C893C0098C80A /* FSHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
