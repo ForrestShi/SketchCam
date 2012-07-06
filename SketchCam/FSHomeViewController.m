@@ -10,7 +10,7 @@
 #import "FSCameraFilterViewController.h"
 
 
-@interface FSHomeViewController (){
+@interface FSHomeViewController ()<UIImagePickerControllerDelegate>{
     UIButton    *_imageFilterButton;
     UIButton    *_cameraFilterButton;
 }
@@ -55,6 +55,24 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    DLog(@"DEBUG");
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    DLog(@"DEBUG");
+    
+    for (UIView* subView in [self.view subviews]) {
+        subView.alpha = 1.;
+    } 
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    DLog(@"DEBUG");
+    [self hideSubviewsBeforeLeave];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -62,11 +80,53 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)launchImageFilter:(id)sender{}
+- (void)hideSubviewsBeforeLeave{
+    for (UIView* subView in [self.view subviews]) {
+        subView.alpha = 0.;
+    } 
+}
+
+- (void)launchImageFilter:(id)sender{
+
+    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+    ipc.delegate = self;
+    
+    [self presentViewController:ipc animated:YES completion:^{
+        //
+    }];
+    
+    
+}
 
 - (void)launchCameraFilter:(id)sender{
-    FSCameraFilterViewController *camVC = [[FSCameraFilterViewController alloc] init];
+    
+    FSCameraFilterViewController *camVC = [[FSCameraFilterViewController alloc] initCameraFX];
     [self presentViewController:camVC animated:YES completion:^{
+        
+    }];
+}
+
+#pragma mark - UIImagePickerControllerDelegate 
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    DLog(@"DEBUG");
+    
+    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    [self hideSubviewsBeforeLeave];
+
+    [picker dismissViewControllerAnimated:YES completion:^{
+        
+        FSCameraFilterViewController *camVC = [[FSCameraFilterViewController alloc] initWithPicture:selectedImage];
+        [self presentViewController:camVC animated:YES completion:^{
+            
+        }];
+
+    }];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:^{
         
     }];
 }

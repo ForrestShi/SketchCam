@@ -36,8 +36,12 @@ static NSString *kVideoStopRecordImage = @"button_stop_red.png";
 static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 
+
 @interface FSCameraFilterViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
+    GPUImagePicture     *pictureFX;
+    BOOL                cameraMode;   // YES for stillCamera ; NO for pictureFX
+    
     GPUImageOutput<GPUImageInput> *filter;
     
     GPUImageView *cameraView;
@@ -81,9 +85,80 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 @implementation FSCameraFilterViewController
 
-
 #define ROWS    3
 #define COLS    3
+
+
+#pragma mark - Init
+
+- (id) initWithPicture:(UIImage*)picture{
+    if (self = [super init] ) {
+        DLog(@"DEBUG");
+        cameraMode = NO;
+        pictureFX = [[GPUImagePicture alloc] initWithImage:picture smoothlyScaleOutput:YES];    
+    }
+    return self;
+}
+
+- (id) initCameraFX {
+    if (self = [super init] ) {
+        DLog(@"DEBUG");
+        cameraMode = YES;
+    }
+    return self;
+}
+
+
+- (void)loadView
+{    
+    DLog(@"DEBUG");
+    [super loadView];
+    
+    if (!cameraMode) {
+        
+        [self setupDisplayFiltering]; 
+    }else {
+        [self createFilterCameraViewWithCamera:AVCaptureDevicePositionFront];
+
+    }
+    [self createFullScreenUI];
+}
+
+- (void) setupDisplayFiltering{
+    _filterType = GPUIMAGE_SEPIA;
+    cameraView = [[GPUImageView alloc] initWithFrame:self.view.bounds];
+    filter = [[GPUImageSepiaFilter alloc] init];
+    [filter forceProcessingAtSize:cameraView.sizeInPixels]; // This is now needed to make the filter run at the smaller output size
+    
+    [pictureFX addTarget:filter];
+    [filter addTarget:cameraView];
+    [pictureFX processImage];
+    [self.view addSubview:cameraView];
+}
+
+- (void) createFilterCameraViewWithCamera:(AVCaptureDevicePosition)devicePosition{
+    
+    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	    captureSessionSetup = AVCaptureSessionPresetPhoto;
+    
+    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    
+    cameraView = [[GPUImageView alloc ] initWithFrame:self.view.bounds];
+    cameraView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
+    
+    filter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter: _filterType ];
+    
+    [filter forceProcessingAtSize:cameraView.sizeInPixels];
+    [stillCamera addTarget:filter];
+    [filter addTarget:cameraView];
+    
+    [self.view addSubview:cameraView];
+        
+}
+
+#pragma make - Privates for View
 
 - (void) hideFullScreenUI:(BOOL)hidden{
 
@@ -128,13 +203,11 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         backButton.userInteractionEnabled = YES;
         [backButton addTarget:self action:@selector(backToHome) forControlEvents:UIControlEventAllEvents];
 
+        [cameraView addSubview:backButton];
     }
-
-    [cameraView addSubview:backButton];
-
     
     // swich of front/back camera 
-    if (!switchFrontBackButton) {
+    if (cameraMode && !switchFrontBackButton) {
         switchFrontBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [switchFrontBackButton setImage:[UIImage imageNamed:kSwitchFrontBackCamImage] forState:UIControlStateNormal];
         
@@ -143,8 +216,9 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
                                                  IS_PAD()? 64.:48., 
                                                  IS_PAD() ? 64.:48.);
         [switchFrontBackButton addTarget:self action:@selector(switchCameras:) forControlEvents:UIControlEventTouchDown];
+        [cameraView addSubview:switchFrontBackButton];
+
     }
-    [cameraView addSubview:switchFrontBackButton];
 
     // slider
     if (!filterSettingsSlider) {
@@ -159,97 +233,103 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         [filterSettingsSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
         filterSettingsSlider.minimumValue = 0.0;
         filterSettingsSlider.maximumValue = 3.0;
-        filterSettingsSlider.value = 1.0; 
+        filterSettingsSlider.value = 1.0;
+        
+        [cameraView addSubview:filterSettingsSlider];
+        DLog(@"slider %@",NSStringFromCGRect(filterSettingsSlider.frame));
+        
     }
-    [cameraView addSubview:filterSettingsSlider];
-    DLog(@"slider %@",NSStringFromCGRect(filterSettingsSlider.frame));
-    
+
     //time label for recording 
-    if (!timingLabel) {
+    if (cameraMode && !timingLabel) {
         timingLabel = [[UILabel alloc] initWithFrame:CGRectMake(viewWidth/3, GAP_Y, viewWidth/2, 20.)];
         timingLabel.backgroundColor = [UIColor clearColor];
         timingLabel.textColor = [UIColor redColor];
         timingLabel.textAlignment = UITextAlignmentLeft;
         timingLabel.hidden = YES;
+        [cameraView addSubview:timingLabel];
     }
-    [cameraView addSubview:timingLabel];
 
     
     
     //Bottom controller panel 
-    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
-                                                self.view.bounds.size.width,
-                                                IS_PAD()? 80.0 : 60.);
-
-    if (!bottomControlPanel) {
-
-        bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
+    if (cameraMode) {
+        CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
+                                                    self.view.bounds.size.width,
+                                                    IS_PAD()? 80.0 : 60.);
         
-        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
-        bottomControlPanel.layer.cornerRadius = 10.0;
-        bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
-        bottomControlPanel.layer.shadowOpacity = 0.5;
-        bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
- 
+        if (!bottomControlPanel) {
+            
+            bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
+            
+            bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
+            bottomControlPanel.layer.cornerRadius = 10.0;
+            bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
+            bottomControlPanel.layer.shadowOpacity = 0.5;
+            bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
+            
+        }
+        
+        // thumb 
+        if (!thumbCapturedImageView) {
+            thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, 
+                                                                                   BOTTOM_OFFSET_Y,  
+                                                                                   bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2., 
+                                                                                   bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2.)];
+            
+            DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
+            thumbCapturedImageView.backgroundColor = [UIColor clearColor];
+            
+            //thumbCapturedImageView.layer.cornerRadius = 8.0;
+            thumbCapturedImageView.layer.borderColor = [UIColor orangeColor].CGColor;
+            thumbCapturedImageView.layer.borderWidth = 2.0;
+            
+            thumbCapturedImageView.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapThumbImage:)];
+            [thumbCapturedImageView addGestureRecognizer:tapGesture];
+            [bottomControlPanel addSubview:thumbCapturedImageView];
+        }
+        
+        //capture button
+        if (!photoCaptureButton) {
+            photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            //DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
+            
+            photoCaptureButton.frame = CGRectMake(viewWidth/2 - TAKE_PIC_BTN_WIDTH/2, 
+                                                  3.0, TAKE_PIC_BTN_WIDTH, TAKE_PIC_BTN_HEIGHT);
+            DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
+            [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
+            //photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+            [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchDown];
+            [bottomControlPanel addSubview:photoCaptureButton];
+        }
+        
+        
+        // switch from photo and video 
+        if (!photoSwitchVideo) {
+            photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
+                                                                          MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
+                                                                          BOTTOM_SWITCH_WIDTH, 
+                                                                          MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
+            [photoSwitchVideo setOnTintColor:[UIColor redColor]];
+            photoSwitchVideo.backgroundColor = [UIColor clearColor];
+            [photoSwitchVideo addTarget:self action:@selector(switchPhotoBetweenRecord:) forControlEvents:UIControlEventTouchUpInside];
+            [bottomControlPanel addSubview:photoSwitchVideo];
+            
+        }
+        
+        
+        
+        [cameraView addSubview:bottomControlPanel];
+        
+        //white flash screen
+        whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
+        whiteFlashView.backgroundColor = [UIColor whiteColor];
+        whiteFlashView.alpha = 0;
+        [cameraView addSubview:whiteFlashView];
+        
     }
-    
-    // thumb 
-    if (!thumbCapturedImageView) {
-        thumbCapturedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(BOTTOM_OFFSET_X, 
-                                                                               BOTTOM_OFFSET_Y,  
-                                                                               bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2., 
-                                                                               bottomControlPanelFrame.size.height - BOTTOM_OFFSET_Y*2.)];
-        
-        DLog(@"thumb frame is %@", NSStringFromCGRect(thumbCapturedImageView.frame));
-        thumbCapturedImageView.backgroundColor = [UIColor clearColor];
-        
-        //thumbCapturedImageView.layer.cornerRadius = 8.0;
-        thumbCapturedImageView.layer.borderColor = [UIColor orangeColor].CGColor;
-        thumbCapturedImageView.layer.borderWidth = 2.0;
-        
-        thumbCapturedImageView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapThumbImage:)];
-        [thumbCapturedImageView addGestureRecognizer:tapGesture];
-        [bottomControlPanel addSubview:thumbCapturedImageView];
-    }
-    
-    //capture button
-    if (!photoCaptureButton) {
-        photoCaptureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        //DLog(@"TAKE_PIC_BTN_WIDTH %f and %f",TAKE_PIC_BTN_WIDTH , IS_PAD() ? 80.0 : 60. );
 
-        photoCaptureButton.frame = CGRectMake(viewWidth/2 - TAKE_PIC_BTN_WIDTH/2, 
-                                              3.0, TAKE_PIC_BTN_WIDTH, TAKE_PIC_BTN_HEIGHT);
-        DLog(@"frame %@", NSStringFromCGRect(photoCaptureButton.frame));
-        [photoCaptureButton setImage:[UIImage imageNamed:kStillCaptureImage] forState:UIControlStateNormal];
-        //photoCaptureButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-        [photoCaptureButton addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchDown];
-        [bottomControlPanel addSubview:photoCaptureButton];
-    }
-
-    
-    // switch from photo and video 
-    if (!photoSwitchVideo) {
-        photoSwitchVideo = [[UISwitch alloc] initWithFrame:CGRectMake(viewWidth - BOTTOM_OFFSET_X*2 - BOTTOM_SWITCH_WIDTH, 
-                                                                      MAX(0.f, bottomControlPanel.frame.size.height/2 - BOTTOM_SWITCH_HEIGHT/2),
-                                                                      BOTTOM_SWITCH_WIDTH, 
-                                                                      MIN(BOTTOM_SWITCH_HEIGHT,bottomControlPanel.frame.size.height))];
-        [photoSwitchVideo setOnTintColor:[UIColor redColor]];
-        photoSwitchVideo.backgroundColor = [UIColor clearColor];
-        [photoSwitchVideo addTarget:self action:@selector(switchPhotoBetweenRecord:) forControlEvents:UIControlEventTouchUpInside];
-        [bottomControlPanel addSubview:photoSwitchVideo];
-        
-    }
-
-    
-    
-    [cameraView addSubview:bottomControlPanel];
-    
-    //white flash screen
-    whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
-    whiteFlashView.backgroundColor = [UIColor whiteColor];
-    whiteFlashView.alpha = 0;
-    [cameraView addSubview:whiteFlashView];
 }
 
 
@@ -291,49 +371,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
 }
 
-
-- (void) onTap:(UITapGestureRecognizer*)gesture{
-
-    if ([gesture state] == UIGestureRecognizerStateEnded && !_isTapped ) {
-
-        _isTapped = YES;
-        
-        CGPoint tapPoint = [gesture locationInView:self.view];
-        int x = (int)floorf(tapPoint.x /(self.view.frame.size.width/ROWS));
-        int y = (int)floorf(tapPoint.y /(self.view.frame.size.height/COLS));
-        int filterIndex = y*ROWS + x;
-        DLog(@"tap filter %d", filterIndex);
-        _filterType = filterIndex;  
-        filter = [subViewFilterArray objectAtIndex:filterIndex];
-        
-        cameraView = (GPUImageView*)[gesture view];      
-        
-        
-        [self.view bringSubviewToFront:cameraView];
-
-        [self viewEnterFullScreen:cameraView];
-        
-    }
-}
-
-- (void) backToHome{
-
-#ifdef ARTCAM
-    if (_isTapped) {
-        [self viewLeaveFullScreen:cameraView];
-        _isTapped = NO;
-        _viewIsFullScreenMode = NO;
-    }
-#else
-    
-    [stillCamera stopCameraCapture];
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-    
-#endif
-}
-
 - (void) createSubCameraViewsWithCamera:(AVCaptureDevicePosition)devicePosition{
     
     NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
@@ -342,7 +379,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        
+    
     CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];	
     CGFloat subViewWidth = roundf(mainScreenFrame.size.width/ ROWS );
     CGFloat subViewHeight = roundf(mainScreenFrame.size.height/ COLS );
@@ -391,30 +428,10 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
 }
 
-- (void) createFilterCameraViewWithCamera:(AVCaptureDevicePosition)devicePosition{
-    
-    NSString *captureSessionSetup = AVCaptureSessionPreset640x480;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-	    captureSessionSetup = AVCaptureSessionPresetPhoto;
-    
-    stillCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-    stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-    
-    cameraView = [[GPUImageView alloc ] initWithFrame:self.view.bounds];
-    cameraView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
-        
-    filter = [[FSGPUImageFilterManager sharedFSGPUImageFilterManager] createGPUImageFilter: _filterType ];
 
-    [filter forceProcessingAtSize:cameraView.sizeInPixels];
-    [stillCamera addTarget:filter];
-    [filter addTarget:cameraView];
-   
-    [self.view addSubview:cameraView];
-    
-    [self createFullScreenUI];
 
-}
 
+#pragma mark - View Life Cycle 
 
 - (void)viewDidLoad
 {
@@ -429,9 +446,9 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
  
 #elif SEPIACAM
-    _filterType = GPUIMAGE_SEPIA;
-    [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
-        
+//    _filterType = GPUIMAGE_SEPIA;
+//    [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
+//        
 #elif FUNCAM
     _filterType = GPUIMAGE_BULGE;
     [self createFilterCameraViewWithCamera:AVCaptureDevicePositionBack];
@@ -502,6 +519,48 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 #pragma mark - Actions of UI 
 
+- (void) onTap:(UITapGestureRecognizer*)gesture{
+    
+    if ([gesture state] == UIGestureRecognizerStateEnded && !_isTapped ) {
+        
+        _isTapped = YES;
+        
+        CGPoint tapPoint = [gesture locationInView:self.view];
+        int x = (int)floorf(tapPoint.x /(self.view.frame.size.width/ROWS));
+        int y = (int)floorf(tapPoint.y /(self.view.frame.size.height/COLS));
+        int filterIndex = y*ROWS + x;
+        DLog(@"tap filter %d", filterIndex);
+        _filterType = filterIndex;  
+        filter = [subViewFilterArray objectAtIndex:filterIndex];
+        
+        cameraView = (GPUImageView*)[gesture view];      
+        
+        
+        [self.view bringSubviewToFront:cameraView];
+        
+        [self viewEnterFullScreen:cameraView];
+        
+    }
+}
+
+- (void) backToHome{
+    
+#ifdef ARTCAM
+    if (_isTapped) {
+        [self viewLeaveFullScreen:cameraView];
+        _isTapped = NO;
+        _viewIsFullScreenMode = NO;
+    }
+#else
+    
+    [stillCamera stopCameraCapture];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+#endif
+}
+
 - (void) onTapThumbImage:(id)sender{
     DLog(@"DEBUG");
     UIImagePickerController *imgPickerVC = [[UIImagePickerController alloc] init];
@@ -542,13 +601,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     [cameraView.layer addAnimation:animation forKey:nil];
     
     [stillCamera rotateCamera];
-}
-
-- (void) animationDidStart:(CAAnimation *)anim{
-    //[stillCamera rotateCamera];
-}
-- (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag{
-    //[stillCamera rotateCamera];
 }
 
 

@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "GPUImage.h"
 
+
+
 @interface FSCameraFilterViewController : UIViewController
+
+- (id) initWithPicture:(UIImage*)picture;
+- (id) initCameraFX ;
+
 
 @end

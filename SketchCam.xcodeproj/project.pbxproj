@@ -763,7 +763,9 @@
 		189EBF26158C508900DF177C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = FS;
 				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = xcodechina;
 			};
 			buildConfigurationList = 189EBF29158C508900DF177C /* Build configuration list for PBXProject "SketchCam" */;
 			compatibilityVersion = "Xcode 3.2";
