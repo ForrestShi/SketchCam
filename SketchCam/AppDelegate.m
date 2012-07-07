@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "LaunchImageTransition.h"
 #import "FSHomeViewController.h"
+#import "SCFacebook.h"
+
 
 @implementation AppDelegate
 
@@ -27,8 +29,29 @@
     launchVC.view.frame = self.window.bounds;
     self.window.rootViewController = launchVC;
     [self.window makeKeyAndVisible];
+    
+    //Your application App ID/API Key Facebook
+    [SCFacebook initWithAppId:@"414276128610860"];
+   
     return YES;
 }
+
+#pragma mark - 
+#pragma mark - SCFacebook Handle
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    DLog(@"DEBUG url %@",url);
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPEN_URL object:url];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    DLog(@"DEBUG url %@",url);
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPEN_URL object:url];
+    return YES;
+}
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

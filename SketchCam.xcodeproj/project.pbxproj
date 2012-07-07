@@ -251,6 +251,11 @@
 		189EBFDF158D965200DF177C /* button_grey_stop@128.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD2158D965200DF177C /* button_grey_stop@128.png */; };
 		189EBFE3158D965200DF177C /* button_stop_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD6158D965200DF177C /* button_stop_red.png */; };
 		189EBFE4158D965200DF177C /* media_record.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD7158D965200DF177C /* media_record.png */; };
+		189F271F15A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
+		189F272015A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
+		189F272115A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		189F272215A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
+		189F272E15A800DB001B479B /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 189F272B15A7FF4C001B479B /* libfacebook_ios_sdk.a */; };
 		18A5BC241593200F000BC676 /* 3x3_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC151593200F000BC676 /* 3x3_grid.png */; };
 		18A5BC251593200F000BC676 /* button_blue_repeat@48.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC161593200F000BC676 /* button_blue_repeat@48.png */; };
 		18A5BC261593200F000BC676 /* button_blue_repeat@64.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC171593200F000BC676 /* button_blue_repeat@64.png */; };
@@ -319,6 +324,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = BCF1A33314DDB1EC00852800;
 			remoteInfo = GPUImage;
+		};
+		189F272A15A7FF4C001B479B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = "facebook-ios-sdk";
+		};
+		189F272C15A8002A001B479B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = "facebook-ios-sdk";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -394,6 +413,9 @@
 		189EBFD2158D965200DF177C /* button_grey_stop@128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_grey_stop@128.png"; sourceTree = "<group>"; };
 		189EBFD6158D965200DF177C /* button_stop_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_stop_red.png; sourceTree = "<group>"; };
 		189EBFD7158D965200DF177C /* media_record.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_record.png; sourceTree = "<group>"; };
+		189F271D15A7FED5001B479B /* SCFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCFacebook.h; sourceTree = "<group>"; };
+		189F271E15A7FED5001B479B /* SCFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCFacebook.m; sourceTree = "<group>"; };
+		189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "facebook-ios-sdk.xcodeproj"; path = "vendor/facebooksdk/src/facebook-ios-sdk.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		18A5BC151593200F000BC676 /* 3x3_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3x3_grid.png; sourceTree = "<group>"; };
 		18A5BC161593200F000BC676 /* button_blue_repeat@48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_blue_repeat@48.png"; sourceTree = "<group>"; };
 		18A5BC171593200F000BC676 /* button_blue_repeat@64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_blue_repeat@64.png"; sourceTree = "<group>"; };
@@ -444,6 +466,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				189F272E15A800DB001B479B /* libfacebook_ios_sdk.a in Frameworks */,
 				189A175B15972846009D6E89 /* Security.framework in Frameworks */,
 				189A175C15972846009D6E89 /* StoreKit.framework in Frameworks */,
 				189A175D15972846009D6E89 /* AssetsLibrary.framework in Frameworks */,
@@ -535,6 +558,7 @@
 		189EBF24158C508900DF177C = {
 			isa = PBXGroup;
 			children = (
+				189F271C15A7FED5001B479B /* SCFacebook */,
 				189A180415975340009D6E89 /* Icons */,
 				189EBFA9158CB8DC00DF177C /* MKStoreKit */,
 				189EBF39158C508A00DF177C /* SketchCam */,
@@ -579,14 +603,8 @@
 		189EBF39158C508A00DF177C /* SketchCam */ = {
 			isa = PBXGroup;
 			children = (
-				18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */,
-				18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */,
-				189C5B86159C893C0098C80A /* FSHomeViewController.h */,
-				189C5B87159C893C0098C80A /* FSHomeViewController.m */,
-				189EBF45158C508A00DF177C /* FSCameraFilterViewController.h */,
-				189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */,
-				1888B27D158DFE2A00950C40 /* LaunchImageTransition.h */,
-				1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */,
+				189F272F15A80102001B479B /* Filter */,
+				189F273015A8010D001B479B /* ViewControllers */,
 				189EBF42158C508A00DF177C /* AppDelegate.h */,
 				189EBF43158C508A00DF177C /* AppDelegate.m */,
 				189EBF3A158C508A00DF177C /* Supporting Files */,
@@ -682,6 +700,46 @@
 			name = UI_Resources;
 			sourceTree = "<group>";
 		};
+		189F271C15A7FED5001B479B /* SCFacebook */ = {
+			isa = PBXGroup;
+			children = (
+				189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */,
+				189F271D15A7FED5001B479B /* SCFacebook.h */,
+				189F271E15A7FED5001B479B /* SCFacebook.m */,
+			);
+			path = SCFacebook;
+			sourceTree = "<group>";
+		};
+		189F272415A7FF4B001B479B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				189F272B15A7FF4C001B479B /* libfacebook_ios_sdk.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		189F272F15A80102001B479B /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */,
+				18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */,
+			);
+			name = Filter;
+			sourceTree = "<group>";
+		};
+		189F273015A8010D001B479B /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				189C5B86159C893C0098C80A /* FSHomeViewController.h */,
+				189C5B87159C893C0098C80A /* FSHomeViewController.m */,
+				189EBF45158C508A00DF177C /* FSCameraFilterViewController.h */,
+				189EBF46158C508A00DF177C /* FSCameraFilterViewController.m */,
+				1888B27D158DFE2A00950C40 /* LaunchImageTransition.h */,
+				1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -714,6 +772,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				189F272D15A8002A001B479B /* PBXTargetDependency */,
 				189A174B15972846009D6E89 /* PBXTargetDependency */,
 			);
 			name = SepiaCam;
@@ -779,6 +838,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 189F272415A7FF4B001B479B /* Products */;
+					ProjectRef = 189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */;
+				},
+				{
 					ProductGroup = 189EBF54158C564900DF177C /* Products */;
 					ProjectRef = 189EBF53158C564900DF177C /* GPUImage.xcodeproj */;
 				},
@@ -806,6 +869,13 @@
 			fileType = wrapper.cfbundle;
 			path = GPUImageTests.octest;
 			remoteRef = 189EBF5E158C564A00DF177C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		189F272B15A7FF4C001B479B /* libfacebook_ios_sdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libfacebook_ios_sdk.a;
+			remoteRef = 189F272A15A7FF4C001B479B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1027,6 +1097,7 @@
 				189A17031597200F009D6E89 /* NSData+Base64.m in Sources */,
 				189A17041597200F009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B89159C893C0098C80A /* FSHomeViewController.m in Sources */,
+				189F272015A7FED5001B479B /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,6 +1118,7 @@
 				189A175815972846009D6E89 /* NSData+Base64.m in Sources */,
 				189A175915972846009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B8A159C893C0098C80A /* FSHomeViewController.m in Sources */,
+				189F272115A7FED5001B479B /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1067,6 +1139,7 @@
 				189A17AD159729A3009D6E89 /* NSData+Base64.m in Sources */,
 				189A17AE159729A3009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B8B159C893C0098C80A /* FSHomeViewController.m in Sources */,
+				189F272215A7FED5001B479B /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1087,6 +1160,7 @@
 				189EBFBC158CBB0100DF177C /* NSData+Base64.m in Sources */,
 				189EBFBD158CBB0100DF177C /* SFHFKeychainUtils.m in Sources */,
 				189C5B88159C893C0098C80A /* FSHomeViewController.m in Sources */,
+				189F271F15A7FED5001B479B /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1112,6 +1186,11 @@
 			isa = PBXTargetDependency;
 			name = GPUImage;
 			targetProxy = 189EBF6B158C56B200DF177C /* PBXContainerItemProxy */;
+		};
+		189F272D15A8002A001B479B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "facebook-ios-sdk";
+			targetProxy = 189F272C15A8002A001B479B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1141,6 +1220,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "./vendor/facebooksdk/src/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
@@ -1185,6 +1265,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "./vendor/facebooksdk/src/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "D583E7D6-FCBF-4A41-968A-F223209E9984";
@@ -1308,6 +1389,7 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SepiaCam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1327,6 +1409,7 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SepiaCam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1347,6 +1430,7 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SepiaCam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1367,6 +1451,7 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SepiaCam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1475,6 +1560,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "./vendor/facebooksdk/src/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1496,6 +1582,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "./vendor/facebooksdk/src/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";

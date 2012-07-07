@@ -4,3 +4,6 @@
 [submodule "vendor/mkstorekit"]
 	path = vendor/mkstorekit
 	url = git://github.com/MugunthKumar/MKStoreKit.git
+[submodule "vendor/facebooksdk"]
+	path = vendor/facebooksdk
+	url = git@github.com:ForrestShi/facebook-ios-sdk.git

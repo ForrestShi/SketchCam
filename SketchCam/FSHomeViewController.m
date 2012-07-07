@@ -8,11 +8,12 @@
 
 #import "FSHomeViewController.h"
 #import "FSCameraFilterViewController.h"
-
+#import "SCFacebook.h"
 
 @interface FSHomeViewController ()<UIImagePickerControllerDelegate>{
     UIButton    *_imageFilterButton;
     UIButton    *_cameraFilterButton;
+    UIButton    *_loginFBButton;
 }
 
 @end
@@ -33,7 +34,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor yellowColor];
     
     if (!_imageFilterButton) {
         _imageFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -48,6 +49,18 @@
         [_cameraFilterButton addTarget:self action:@selector(launchCameraFilter:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_cameraFilterButton];
     }
+    
+    if (!_loginFBButton) {
+        _loginFBButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _loginFBButton.frame = CGRectMake(100, 300, 100, 60);
+        [_loginFBButton addTarget:self action:@selector(loginFB:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:_loginFBButton];
+    }
+    
+
+    
+    
+    
 
 }
 
@@ -86,6 +99,8 @@
     } 
 }
 
+#pragma mark - Actions of Buttons
+
 - (void)launchImageFilter:(id)sender{
 
     UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
@@ -103,6 +118,17 @@
     FSCameraFilterViewController *camVC = [[FSCameraFilterViewController alloc] initCameraFX];
     [self presentViewController:camVC animated:YES completion:^{
         
+    }];
+}
+
+- (void)loginFB:(id)sender{
+    
+    [SCFacebook loginCallBack:^(BOOL success, id result) {
+        //loadingView.hidden = YES;
+        if (success) {
+            //[self getUserInfo];
+            DLog(@"DEBUG %@",result);
+        }
     }];
 }
 

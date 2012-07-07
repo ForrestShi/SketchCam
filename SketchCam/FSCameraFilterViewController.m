@@ -54,7 +54,9 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     UIImageView *thumbCapturedImageView;
     UIView *whiteFlashView ;
-    UIView *bottomControlPanel;
+    //UIView *bottomControlPanel;
+    UIToolbar   *bottomControlPanel;
+
     UIPopoverController *popoverCtr;
     BOOL            captureStillImageMode;
     BOOL            isRecording;
@@ -250,8 +252,6 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         [cameraView addSubview:timingLabel];
     }
 
-    
-    
     //Bottom controller panel 
     if (cameraMode) {
         CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
@@ -259,15 +259,8 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
                                                     IS_PAD()? 80.0 : 60.);
         
         if (!bottomControlPanel) {
-            
-            bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
-            
-            bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
-            bottomControlPanel.layer.cornerRadius = 10.0;
-            bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
-            bottomControlPanel.layer.shadowOpacity = 0.5;
-            bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
-            
+            bottomControlPanel = [[UIToolbar alloc] initWithFrame:bottomControlPanelFrame];
+            bottomControlPanel.barStyle = UIBarStyleBlackTranslucent;
         }
         
         // thumb 
