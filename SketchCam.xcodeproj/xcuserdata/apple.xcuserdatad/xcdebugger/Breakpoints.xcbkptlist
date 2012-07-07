@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SketchCam/FSCameraFilterViewController.m"
-         timestampString = "363334707.376585"
+         timestampString = "363364820.95209"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "121"
-         endingLineNumber = "121"
+         startingLineNumber = "101"
+         endingLineNumber = "101"
          landmarkName = "-loadView"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SketchCam/FSCameraFilterViewController.m"
-         timestampString = "363334707.376585"
+         timestampString = "363364820.95209"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "123"
-         endingLineNumber = "123"
+         startingLineNumber = "103"
+         endingLineNumber = "103"
          landmarkName = "-loadView"
          landmarkType = "5">
       </FileBreakpoint>

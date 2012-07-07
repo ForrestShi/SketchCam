@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		18005EBD158E4CAD005E8504 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
+		187FAFA815A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; };
+		187FAFA915A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; };
+		187FAFAA15A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		187FAFAB15A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; };
 		1888B259158D9D6D00950C40 /* sketchblur2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B252158D9D6D00950C40 /* sketchblur2.jpg */; };
 		1888B25A158D9D6D00950C40 /* sketchnoisegray.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B253158D9D6D00950C40 /* sketchnoisegray.jpg */; };
 		1888B25B158D9D6D00950C40 /* sketchhms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B254158D9D6D00950C40 /* sketchhms.jpg */; };
@@ -19,7 +23,6 @@
 		1888B264158DA29900950C40 /* stone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B262158DA29900950C40 /* stone.jpg */; };
 		1888B27F158DFFBC00950C40 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189098CC1590B29300E60FB9 /* left.png in Resources */ = {isa = PBXBuildFile; fileRef = 189098CB1590B29300E60FB9 /* left.png */; };
-		18919C09159478160067B1CE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
 		189A16F91597200F009D6E89 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
 		189A16FA1597200F009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A16FB1597200F009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
@@ -83,7 +86,6 @@
 		189A17371597200F009D6E89 /* video_camera@128.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC221593200F000BC676 /* video_camera@128.png */; };
 		189A17381597200F009D6E89 /* video_camera@256.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC231593200F000BC676 /* video_camera@256.png */; };
 		189A17391597200F009D6E89 /* fether.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC33159437B5000BC676 /* fether.jpeg */; };
-		189A17401597200F009D6E89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
 		189A174E15972846009D6E89 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
 		189A174F15972846009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A175015972846009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
@@ -147,7 +149,6 @@
 		189A178C15972846009D6E89 /* video_camera@128.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC221593200F000BC676 /* video_camera@128.png */; };
 		189A178D15972846009D6E89 /* video_camera@256.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC231593200F000BC676 /* video_camera@256.png */; };
 		189A178E15972846009D6E89 /* fether.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC33159437B5000BC676 /* fether.jpeg */; };
-		189A179515972846009D6E89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
 		189A17A3159729A3009D6E89 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
 		189A17A4159729A3009D6E89 /* LaunchImageTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		189A17A5159729A3009D6E89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 189EBF3F158C508A00DF177C /* main.m */; };
@@ -211,7 +212,6 @@
 		189A17E1159729A3009D6E89 /* video_camera@128.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC221593200F000BC676 /* video_camera@128.png */; };
 		189A17E2159729A3009D6E89 /* video_camera@256.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC231593200F000BC676 /* video_camera@256.png */; };
 		189A17E3159729A3009D6E89 /* fether.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC33159437B5000BC676 /* fether.jpeg */; };
-		189A17EA159729A3009D6E89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
 		189C5B88159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
 		189C5B89159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
 		189C5B8A159C893C0098C80A /* FSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189C5B87159C893C0098C80A /* FSHomeViewController.m */; };
@@ -251,10 +251,6 @@
 		189EBFDF158D965200DF177C /* button_grey_stop@128.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD2158D965200DF177C /* button_grey_stop@128.png */; };
 		189EBFE3158D965200DF177C /* button_stop_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD6158D965200DF177C /* button_stop_red.png */; };
 		189EBFE4158D965200DF177C /* media_record.png in Resources */ = {isa = PBXBuildFile; fileRef = 189EBFD7158D965200DF177C /* media_record.png */; };
-		189F271F15A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
-		189F272015A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
-		189F272115A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		189F272215A7FED5001B479B /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F271E15A7FED5001B479B /* SCFacebook.m */; };
 		189F272E15A800DB001B479B /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 189F272B15A7FF4C001B479B /* libfacebook_ios_sdk.a */; };
 		18A5BC241593200F000BC676 /* 3x3_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC151593200F000BC676 /* 3x3_grid.png */; };
 		18A5BC251593200F000BC676 /* button_blue_repeat@48.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A5BC161593200F000BC676 /* button_blue_repeat@48.png */; };
@@ -344,6 +340,8 @@
 /* Begin PBXFileReference section */
 		18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSGPUImageFilterManager.h; sourceTree = "<group>"; };
 		18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FSGPUImageFilterManager.m; sourceTree = "<group>"; };
+		187FAFA615A8102A0026C095 /* SCFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCFacebook.h; path = SketchCam/SCFacebook.h; sourceTree = SOURCE_ROOT; };
+		187FAFA715A8102A0026C095 /* SCFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCFacebook.m; path = SketchCam/SCFacebook.m; sourceTree = SOURCE_ROOT; };
 		1888B252158D9D6D00950C40 /* sketchblur2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchblur2.jpg; sourceTree = "<group>"; };
 		1888B253158D9D6D00950C40 /* sketchnoisegray.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchnoisegray.jpg; sourceTree = "<group>"; };
 		1888B254158D9D6D00950C40 /* sketchhms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchhms.jpg; sourceTree = "<group>"; };
@@ -356,7 +354,6 @@
 		1888B27D158DFE2A00950C40 /* LaunchImageTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LaunchImageTransition.h; sourceTree = "<group>"; };
 		1888B27E158DFE2A00950C40 /* LaunchImageTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LaunchImageTransition.m; sourceTree = "<group>"; };
 		189098CB1590B29300E60FB9 /* left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left.png; sourceTree = "<group>"; };
-		18919C08159478160067B1CE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		189A17471597200F009D6E89 /* Sketcam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sketcam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189A17491597200F009D6E89 /* Sketcam-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Sketcam-Info.plist"; path = "/Users/apple/workspace/myApps/myApps2012/CamsApp/SketchCam/Sketcam-Info.plist"; sourceTree = "<absolute>"; };
 		189A179C15972846009D6E89 /* SepiaCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SepiaCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -413,8 +410,6 @@
 		189EBFD2158D965200DF177C /* button_grey_stop@128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_grey_stop@128.png"; sourceTree = "<group>"; };
 		189EBFD6158D965200DF177C /* button_stop_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_stop_red.png; sourceTree = "<group>"; };
 		189EBFD7158D965200DF177C /* media_record.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_record.png; sourceTree = "<group>"; };
-		189F271D15A7FED5001B479B /* SCFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCFacebook.h; sourceTree = "<group>"; };
-		189F271E15A7FED5001B479B /* SCFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCFacebook.m; sourceTree = "<group>"; };
 		189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "facebook-ios-sdk.xcodeproj"; path = "vendor/facebooksdk/src/facebook-ios-sdk.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		18A5BC151593200F000BC676 /* 3x3_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3x3_grid.png; sourceTree = "<group>"; };
 		18A5BC161593200F000BC676 /* button_blue_repeat@48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_blue_repeat@48.png"; sourceTree = "<group>"; };
@@ -615,7 +610,6 @@
 		189EBF3A158C508A00DF177C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				18919C08159478160067B1CE /* Default.png */,
 				1888B260158D9D7300950C40 /* sketch_pattern */,
 				189EBFE5158D965D00DF177C /* UI_Resources */,
 				189EBF3B158C508A00DF177C /* SketchCam-Info.plist */,
@@ -703,9 +697,9 @@
 		189F271C15A7FED5001B479B /* SCFacebook */ = {
 			isa = PBXGroup;
 			children = (
+				187FAFA615A8102A0026C095 /* SCFacebook.h */,
+				187FAFA715A8102A0026C095 /* SCFacebook.m */,
 				189F272315A7FF4B001B479B /* facebook-ios-sdk.xcodeproj */,
-				189F271D15A7FED5001B479B /* SCFacebook.h */,
-				189F271E15A7FED5001B479B /* SCFacebook.m */,
 			);
 			path = SCFacebook;
 			sourceTree = "<group>";
@@ -924,7 +918,6 @@
 				189A17371597200F009D6E89 /* video_camera@128.png in Resources */,
 				189A17381597200F009D6E89 /* video_camera@256.png in Resources */,
 				189A17391597200F009D6E89 /* fether.jpeg in Resources */,
-				189A17401597200F009D6E89 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,7 +964,6 @@
 				189A178C15972846009D6E89 /* video_camera@128.png in Resources */,
 				189A178D15972846009D6E89 /* video_camera@256.png in Resources */,
 				189A178E15972846009D6E89 /* fether.jpeg in Resources */,
-				189A179515972846009D6E89 /* Default.png in Resources */,
 				18D55C491599EE8600B2CC7E /* Icon-72.png in Resources */,
 				18D55C4A1599EE8600B2CC7E /* Icon-72@2x.png in Resources */,
 				18D55C4B1599EE8600B2CC7E /* Icon-Small-50.png in Resources */,
@@ -1026,7 +1018,6 @@
 				189A17E1159729A3009D6E89 /* video_camera@128.png in Resources */,
 				189A17E2159729A3009D6E89 /* video_camera@256.png in Resources */,
 				189A17E3159729A3009D6E89 /* fether.jpeg in Resources */,
-				189A17EA159729A3009D6E89 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1073,7 +1064,6 @@
 				18A5BC311593200F000BC676 /* video_camera@128.png in Resources */,
 				18A5BC321593200F000BC676 /* video_camera@256.png in Resources */,
 				18A5BC34159437B5000BC676 /* fether.jpeg in Resources */,
-				18919C09159478160067B1CE /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1097,7 +1087,7 @@
 				189A17031597200F009D6E89 /* NSData+Base64.m in Sources */,
 				189A17041597200F009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B89159C893C0098C80A /* FSHomeViewController.m in Sources */,
-				189F272015A7FED5001B479B /* SCFacebook.m in Sources */,
+				187FAFA915A8102A0026C095 /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1118,7 +1108,7 @@
 				189A175815972846009D6E89 /* NSData+Base64.m in Sources */,
 				189A175915972846009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B8A159C893C0098C80A /* FSHomeViewController.m in Sources */,
-				189F272115A7FED5001B479B /* SCFacebook.m in Sources */,
+				187FAFAA15A8102A0026C095 /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1139,7 +1129,7 @@
 				189A17AD159729A3009D6E89 /* NSData+Base64.m in Sources */,
 				189A17AE159729A3009D6E89 /* SFHFKeychainUtils.m in Sources */,
 				189C5B8B159C893C0098C80A /* FSHomeViewController.m in Sources */,
-				189F272215A7FED5001B479B /* SCFacebook.m in Sources */,
+				187FAFAB15A8102A0026C095 /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1160,7 +1150,7 @@
 				189EBFBC158CBB0100DF177C /* NSData+Base64.m in Sources */,
 				189EBFBD158CBB0100DF177C /* SFHFKeychainUtils.m in Sources */,
 				189C5B88159C893C0098C80A /* FSHomeViewController.m in Sources */,
-				189F271F15A7FED5001B479B /* SCFacebook.m in Sources */,
+				187FAFA815A8102A0026C095 /* SCFacebook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

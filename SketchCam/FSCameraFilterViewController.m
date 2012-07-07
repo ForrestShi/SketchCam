@@ -8,34 +8,8 @@
 
 #import "FSCameraFilterViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "MKStoreManager.h"
 #import "FSGPUImageFilterManager.h"
-
-#define SWITCH_CAMERA_WIDTH     (IS_PAD() ? 80.0 : 60.)
-#define SWITCH_CAMERA_HEIGHT    (IS_PAD() ? 60.0 : 45.)
-#define GAP_X                   (IS_PAD() ? 30.0 : 20.)
-#define GAP_Y                   (IS_PAD() ? 30.0 : 20.)
-
-
-#define TAKE_PIC_BTN_WIDTH     (IS_PAD() ? 80.0 : 60.)
-#define TAKE_PIC_BTN_HEIGHT    (IS_PAD() ? 60.0 : 45.)
-
-#define BOTTOM_OFFSET_X        (IS_PAD() ? 10.0 : 6.)
-#define BOTTOM_OFFSET_Y        (IS_PAD() ? 10.0 : 6.)
-
-#define CAPTURED_THUMB_IMAGE_HEIGHT ((IS_PAD())? 102.4 *0.8 : 48 * 1.5 * 0.8)
-//#define CAPTURED_THUMB_IMAGE_WIDTH  (CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. ))
-
-#define BOTTOM_SWITCH_WIDTH         ((IS_PAD()) ? 80.0 : 60.)
-#define BOTTOM_SWITCH_HEIGHT        ((IS_PAD()) ? 20.0 : 15.)
-
-static NSString *kSwitchFrontBackCamImage = @"button_blue_repeat@128.png";
-static NSString *kStillCaptureImage = @"camera.png";
-static NSString *kVideoStartRecordImage = @"media_record.png";
-static NSString *kVideoStopRecordImage = @"button_stop_red.png";
-static NSString *kBottomPanelTextureImage = @"fether.jpeg";
-
-
+#import "SCFacebook.h"
 
 @interface FSCameraFilterViewController () <UIImagePickerControllerDelegate , UIPopoverControllerDelegate>{
     GPUImageStillCamera *stillCamera;
@@ -45,6 +19,9 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     GPUImageOutput<GPUImageInput> *filter;
     
     GPUImageView *cameraView;
+    UIImageView *shareImageView;
+    UIButton *quitButton ;
+    
     UISlider *filterSettingsSlider;
     UILabel *timingLabel;
     UIButton *photoCaptureButton;
@@ -56,6 +33,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     UIView *whiteFlashView ;
     //UIView *bottomControlPanel;
     UIToolbar   *bottomControlPanel;
+    UIToolbar   *shareToolbar;
 
     UIPopoverController *popoverCtr;
     BOOL            captureStillImageMode;
@@ -77,6 +55,8 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     NSMutableArray  *subViewsArray;
     NSMutableArray  *subViewFilterArray;
+    
+    UIImage *selectedImage;
     
 }
 
@@ -252,16 +232,19 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         [cameraView addSubview:timingLabel];
     }
 
-    //Bottom controller panel 
+    //Bottom controller panel
+    CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
+                                                self.view.bounds.size.width,
+                                                IS_PAD()? 80.0 : 60.);
+
+    if (!bottomControlPanel) {
+        bottomControlPanel = [[UIToolbar alloc] initWithFrame:bottomControlPanelFrame];
+        bottomControlPanel.barStyle = UIBarStyleBlackTranslucent;
+        [cameraView addSubview:bottomControlPanel];
+    }
+    
     if (cameraMode) {
-        CGRect bottomControlPanelFrame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 80.0 : 60.), 
-                                                    self.view.bounds.size.width,
-                                                    IS_PAD()? 80.0 : 60.);
         
-        if (!bottomControlPanel) {
-            bottomControlPanel = [[UIToolbar alloc] initWithFrame:bottomControlPanelFrame];
-            bottomControlPanel.barStyle = UIBarStyleBlackTranslucent;
-        }
         
         // thumb 
         if (!thumbCapturedImageView) {
@@ -311,15 +294,17 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
             
         }
         
-        
-        
-        [cameraView addSubview:bottomControlPanel];
-        
         //white flash screen
         whiteFlashView = [[UIView alloc] initWithFrame:cameraView.bounds];
         whiteFlashView.backgroundColor = [UIColor whiteColor];
         whiteFlashView.alpha = 0;
         [cameraView addSubview:whiteFlashView];
+        
+    }else {
+        //share buttons for pictureFX
+        UIBarButtonItem *postFBItem = [[UIBarButtonItem alloc] initWithTitle:@"FB" style:UIBarButtonSystemItemAction target:self action:@selector(postToFBWall:)];
+        
+        bottomControlPanel.items = [NSArray arrayWithObjects:postFBItem, nil];
         
     }
 
@@ -468,12 +453,45 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     DLog(@"DEBUG");
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
-    
-    [stillCamera resumeCameraCapture];
+
     [picker dismissModalViewControllerAnimated:YES];
+
+    selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+
+    if (!shareImageView) {
+        shareImageView = [[UIImageView alloc] initWithFrame:cameraView.bounds];
+        [self.view addSubview:shareImageView];
+    }
+    shareImageView.image = selectedImage;
     
+    if (!shareToolbar) {
+        shareToolbar = [[UIToolbar alloc] init];
+        shareToolbar.frame = CGRectMake(0, self.view.bounds.size.height - (IS_PAD()? 64:48), self.view.bounds.size.width, IS_PAD()?64:48);
+        shareToolbar.barStyle = UIBarStyleBlackTranslucent;
+        
+        UIBarButtonItem *fbItm = [[UIBarButtonItem alloc] initWithTitle:@"fb" style:UIBarButtonSystemItemAction target:self action:@selector(postToFBWall:)];
+        
+        UIBarButtonItem *emailItm = [[UIBarButtonItem alloc] initWithTitle:@"email" style:UIBarButtonSystemItemAction target:self action:@selector(postToFBWall:)];
+        
+        shareToolbar.items = [NSArray arrayWithObjects:fbItm,emailItm, nil];
+        [self.view addSubview:shareToolbar];
+    }
+    if (!quitButton) {
+        quitButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        quitButton.backgroundColor = [UIColor blackColor];
+        [quitButton setTitle:@"Quit" forState:UIControlStateNormal];
+        [quitButton addTarget:self action:@selector(quitShareViewToCameraView) forControlEvents:UIControlEventTouchUpInside];
+        quitButton.frame = CGRectMake(100, 100, 100, 60);
+        [self.view addSubview:quitButton];  
+    }
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        shareImageView.alpha = 1.;
+        shareToolbar.alpha = 1.;
+        quitButton.alpha = 1.;
+        cameraView.alpha = 0;
+    }];
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
@@ -536,6 +554,17 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     }
 }
 
+- (void)quitShareViewToCameraView{
+    [UIView animateWithDuration:0.3 animations:^{
+        shareImageView.alpha = 0.;
+        shareToolbar.alpha = 0.;
+        quitButton.alpha = 0.;
+        cameraView.alpha = 1.;
+    }];
+    
+    [stillCamera resumeCameraCapture];
+}
+
 - (void) backToHome{
     
 #ifdef ARTCAM
@@ -556,6 +585,8 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 - (void) onTapThumbImage:(id)sender{
     DLog(@"DEBUG");
+    [stillCamera pauseCameraCapture];
+
     UIImagePickerController *imgPickerVC = [[UIImagePickerController alloc] init];
     imgPickerVC.delegate = self;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
@@ -571,12 +602,12 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
         [popoverCtr presentPopoverFromRect:thumbCapturedImageView.frame inView:thumbCapturedImageView permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }else {
         
-        imgPickerVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentModalViewController:imgPickerVC animated:YES];
+        //imgPickerVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //[self presentModalViewController:imgPickerVC animated:YES];
+        [self presentViewController:imgPickerVC animated:YES completion:^{
+            
+        }];
     }
-    
-    [stillCamera pauseCameraCapture];
-    
 }
 
 // use front/back camera
@@ -784,6 +815,16 @@ long recordingSeconds = 0;
         
     });
     
+}
+
+- (void) postToFBWall:(id)sender{
+ 
+    if (selectedImage) {
+        [SCFacebook feedPostWithPhoto:selectedImage caption:@"Sepia" callBack:^(BOOL success, id result) {
+            //
+            DLog(@"suceess ? %d result %@", success,result);
+        }]; 
+    }
 }
 
 #pragma mark -

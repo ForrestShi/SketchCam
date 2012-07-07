@@ -51,5 +51,30 @@ return shared##classname;                           \
 
 
 
+#define SWITCH_CAMERA_WIDTH     (IS_PAD() ? 80.0 : 60.)
+#define SWITCH_CAMERA_HEIGHT    (IS_PAD() ? 60.0 : 45.)
+#define GAP_X                   (IS_PAD() ? 30.0 : 20.)
+#define GAP_Y                   (IS_PAD() ? 30.0 : 20.)
+
+
+#define TAKE_PIC_BTN_WIDTH     (IS_PAD() ? 80.0 : 60.)
+#define TAKE_PIC_BTN_HEIGHT    (IS_PAD() ? 60.0 : 45.)
+
+#define BOTTOM_OFFSET_X        (IS_PAD() ? 10.0 : 6.)
+#define BOTTOM_OFFSET_Y        (IS_PAD() ? 10.0 : 6.)
+
+#define CAPTURED_THUMB_IMAGE_HEIGHT ((IS_PAD())? 102.4 *0.8 : 48 * 1.5 * 0.8)
+//#define CAPTURED_THUMB_IMAGE_WIDTH  (CAPTURED_THUMB_IMAGE_HEIGHT * ( (IS_PAD()) ? 768.0/1024.0 : 320./480. ))
+
+#define BOTTOM_SWITCH_WIDTH         ((IS_PAD()) ? 80.0 : 60.)
+#define BOTTOM_SWITCH_HEIGHT        ((IS_PAD()) ? 20.0 : 15.)
+
+static NSString *kSwitchFrontBackCamImage = @"button_blue_repeat@128.png";
+static NSString *kStillCaptureImage = @"camera.png";
+static NSString *kVideoStartRecordImage = @"media_record.png";
+static NSString *kVideoStopRecordImage = @"button_stop_red.png";
+static NSString *kBottomPanelTextureImage = @"fether.jpeg";
+
+
 
 

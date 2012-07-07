@@ -33,15 +33,14 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    self.view.backgroundColor = [UIColor yellowColor];
-    
-    if (!_imageFilterButton) {
-        _imageFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _imageFilterButton.frame = CGRectMake(100, 100, 100, 60);
-        [_imageFilterButton addTarget:self action:@selector(launchImageFilter:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:_imageFilterButton];
-    }
+
+    //TODO : 
+//    if (!_imageFilterButton) {
+//        _imageFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        _imageFilterButton.frame = CGRectMake(100, 100, 100, 60);
+//        [_imageFilterButton addTarget:self action:@selector(launchImageFilter:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:_imageFilterButton];
+//    }
     
     if (!_cameraFilterButton) {
         _cameraFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -57,11 +56,6 @@
         [self.view addSubview:_loginFBButton];
     }
     
-
-    
-    
-    
-
 }
 
 - (void)viewDidUnload
@@ -79,6 +73,7 @@
     for (UIView* subView in [self.view subviews]) {
         subView.alpha = 1.;
     } 
+    self.view.backgroundColor = [UIColor whiteColor];
 
 }
 
@@ -101,21 +96,23 @@
 
 #pragma mark - Actions of Buttons
 
-- (void)launchImageFilter:(id)sender{
-
-    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
-    ipc.delegate = self;
-    
-    [self presentViewController:ipc animated:YES completion:^{
-        //
-    }];
-    
-    
-}
+//- (void)launchImageFilter:(id)sender{
+//
+//    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+//    ipc.delegate = self;
+//    
+//    [self presentViewController:ipc animated:YES completion:^{
+//        //
+//    }];
+//}
 
 - (void)launchCameraFilter:(id)sender{
+    [self hideSubviewsBeforeLeave];
+    self.view.backgroundColor = [UIColor clearColor];
     
     FSCameraFilterViewController *camVC = [[FSCameraFilterViewController alloc] initCameraFX];
+    camVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
     [self presentViewController:camVC animated:YES completion:^{
         
     }];
