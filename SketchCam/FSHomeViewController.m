@@ -34,13 +34,16 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 
-    //TODO : 
-//    if (!_imageFilterButton) {
-//        _imageFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        _imageFilterButton.frame = CGRectMake(100, 100, 100, 60);
-//        [_imageFilterButton addTarget:self action:@selector(launchImageFilter:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:_imageFilterButton];
-//    }
+    if (!_loginFBButton) {
+        UIImage *loginImage = [UIImage imageNamed:@"facebook-login.png"];
+        _loginFBButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _loginFBButton.backgroundColor = [UIColor clearColor];
+        _loginFBButton.frame = CGRectMake(self.view.bounds.size.width/2 - loginImage.size.width/2 ,self.view.bounds.size.height/2 , 216, 40);
+        [_loginFBButton setImage:loginImage forState:UIControlStateNormal];
+        [_loginFBButton addTarget:self action:@selector(loginFB:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:_loginFBButton];
+    }
+
     
     if (!_cameraFilterButton) {
         _cameraFilterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -49,12 +52,6 @@
         [self.view addSubview:_cameraFilterButton];
     }
     
-    if (!_loginFBButton) {
-        _loginFBButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _loginFBButton.frame = CGRectMake(100, 300, 100, 60);
-        [_loginFBButton addTarget:self action:@selector(loginFB:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:_loginFBButton];
-    }
     
 }
 

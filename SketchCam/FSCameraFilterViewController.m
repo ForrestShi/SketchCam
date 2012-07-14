@@ -100,8 +100,8 @@
         
         [self setupDisplayFiltering]; 
     }else {
+        
         [self createFilterCameraViewWithCamera:AVCaptureDevicePositionFront];
-
     }
     [self createFullScreenUI];
 }
@@ -144,7 +144,7 @@
 
 - (void) hideFullScreenUI:(BOOL)hidden{
 
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.3 animations:^{
         if (hidden) {
             filterSettingsSlider.alpha = 0.0;
             timingLabel.alpha = 0;
@@ -313,7 +313,7 @@
 
 - (void) viewEnterFullScreen:(UIView*)view{
         
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.3 animations:^{
         _originalFrame = view.frame;
         cameraView.frame = self.view.bounds;
         
@@ -334,7 +334,7 @@
 - (void) viewLeaveFullScreen:(UIView*)view{
     
     UIView *touchedView = view;
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.3 animations:^{
         DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
         touchedView.frame = _originalFrame;
         

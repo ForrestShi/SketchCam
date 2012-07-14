@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		18005EBD158E4CAD005E8504 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
+		18157AE015B19DD400985298 /* facebook_login1.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157ADF15B19DD400985298 /* facebook_login1.png */; };
+		18157AE115B19DD400985298 /* facebook_login1.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157ADF15B19DD400985298 /* facebook_login1.png */; };
+		18157AE215B19DD400985298 /* facebook_login1.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157ADF15B19DD400985298 /* facebook_login1.png */; };
+		18157AE315B19DD400985298 /* facebook_login1.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157ADF15B19DD400985298 /* facebook_login1.png */; };
+		18157AE515B19F1D00985298 /* facebook-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157AE415B19F1D00985298 /* facebook-login.png */; };
+		18157AE615B19F1D00985298 /* facebook-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157AE415B19F1D00985298 /* facebook-login.png */; };
+		18157AE715B19F1D00985298 /* facebook-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157AE415B19F1D00985298 /* facebook-login.png */; };
+		18157AE815B19F1D00985298 /* facebook-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157AE415B19F1D00985298 /* facebook-login.png */; };
 		187FAFA815A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; };
 		187FAFA915A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; };
 		187FAFAA15A8102A0026C095 /* SCFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 187FAFA715A8102A0026C095 /* SCFacebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -340,6 +348,8 @@
 /* Begin PBXFileReference section */
 		18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSGPUImageFilterManager.h; sourceTree = "<group>"; };
 		18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FSGPUImageFilterManager.m; sourceTree = "<group>"; };
+		18157ADF15B19DD400985298 /* facebook_login1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook_login1.png; sourceTree = "<group>"; };
+		18157AE415B19F1D00985298 /* facebook-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook-login.png"; sourceTree = "<group>"; };
 		187FAFA615A8102A0026C095 /* SCFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCFacebook.h; path = SketchCam/SCFacebook.h; sourceTree = SOURCE_ROOT; };
 		187FAFA715A8102A0026C095 /* SCFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCFacebook.m; path = SketchCam/SCFacebook.m; sourceTree = SOURCE_ROOT; };
 		1888B252158D9D6D00950C40 /* sketchblur2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchblur2.jpg; sourceTree = "<group>"; };
@@ -610,6 +620,8 @@
 		189EBF3A158C508A00DF177C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				18157ADF15B19DD400985298 /* facebook_login1.png */,
+				18157AE415B19F1D00985298 /* facebook-login.png */,
 				1888B260158D9D7300950C40 /* sketch_pattern */,
 				189EBFE5158D965D00DF177C /* UI_Resources */,
 				189EBF3B158C508A00DF177C /* SketchCam-Info.plist */,
@@ -918,6 +930,8 @@
 				189A17371597200F009D6E89 /* video_camera@128.png in Resources */,
 				189A17381597200F009D6E89 /* video_camera@256.png in Resources */,
 				189A17391597200F009D6E89 /* fether.jpeg in Resources */,
+				18157AE115B19DD400985298 /* facebook_login1.png in Resources */,
+				18157AE615B19F1D00985298 /* facebook-login.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -972,6 +986,8 @@
 				18D55C4E1599EE8600B2CC7E /* Icon@2x.png in Resources */,
 				18D55C4F1599EE8600B2CC7E /* Icon512.png in Resources */,
 				18D55C501599EE8600B2CC7E /* Ion-Small@2x.png in Resources */,
+				18157AE215B19DD400985298 /* facebook_login1.png in Resources */,
+				18157AE715B19F1D00985298 /* facebook-login.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1018,6 +1034,8 @@
 				189A17E1159729A3009D6E89 /* video_camera@128.png in Resources */,
 				189A17E2159729A3009D6E89 /* video_camera@256.png in Resources */,
 				189A17E3159729A3009D6E89 /* fether.jpeg in Resources */,
+				18157AE315B19DD400985298 /* facebook_login1.png in Resources */,
+				18157AE815B19F1D00985298 /* facebook-login.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,6 +1082,8 @@
 				18A5BC311593200F000BC676 /* video_camera@128.png in Resources */,
 				18A5BC321593200F000BC676 /* video_camera@256.png in Resources */,
 				18A5BC34159437B5000BC676 /* fether.jpeg in Resources */,
+				18157AE015B19DD400985298 /* facebook_login1.png in Resources */,
+				18157AE515B19F1D00985298 /* facebook-login.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1231,9 +1251,10 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6827BB88-43F8-4CF7-A721-76EC537177CA";
@@ -1276,9 +1297,10 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1592,9 +1614,10 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1611,9 +1634,10 @@
 				HEADER_SEARCH_PATHS = (
 					"vendor/gpuimage/framework/source/**",
 					vendor/mkstorekit/Externals,
+					"vendor/facebooksdk/src/**",
 				);
 				INFOPLIST_FILE = "SketchCam/SketchCam-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
