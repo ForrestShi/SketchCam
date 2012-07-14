@@ -25,7 +25,6 @@
 		18919C0515946BF70067B1CE /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919BFF15946BF70067B1CE /* Icon-Small@2x.png */; };
 		18919C0615946BF70067B1CE /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C0015946BF70067B1CE /* Icon.png */; };
 		18919C0715946BF70067B1CE /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C0115946BF70067B1CE /* Icon@2x.png */; };
-		18919C09159478160067B1CE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C08159478160067B1CE /* Default.png */; };
 		18919C0B15947A6A0067B1CE /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18919C0A15947A6A0067B1CE /* Icon-72@2x.png */; };
 		189EBF34158C508A00DF177C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF33158C508A00DF177C /* UIKit.framework */; };
 		189EBF36158C508A00DF177C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 189EBF35158C508A00DF177C /* Foundation.framework */; };
@@ -125,7 +124,6 @@
 		18919BFF15946BF70067B1CE /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		18919C0015946BF70067B1CE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		18919C0115946BF70067B1CE /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		18919C08159478160067B1CE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		18919C0A15947A6A0067B1CE /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		189EBF2F158C508A00DF177C /* ArtCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189EBF33158C508A00DF177C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -298,7 +296,6 @@
 		189EBF3A158C508A00DF177C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				18919C08159478160067B1CE /* Default.png */,
 				1888B260158D9D7300950C40 /* sketch_pattern */,
 				189EBFE5158D965D00DF177C /* UI_Resources */,
 				189EBF3B158C508A00DF177C /* SketchCam-Info.plist */,
@@ -502,7 +499,6 @@
 				18919C0515946BF70067B1CE /* Icon-Small@2x.png in Resources */,
 				18919C0615946BF70067B1CE /* Icon.png in Resources */,
 				18919C0715946BF70067B1CE /* Icon@2x.png in Resources */,
-				18919C09159478160067B1CE /* Default.png in Resources */,
 				18919C0B15947A6A0067B1CE /* Icon-72@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

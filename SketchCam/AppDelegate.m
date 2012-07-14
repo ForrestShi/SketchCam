@@ -23,9 +23,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     ViewController *rootVC = [[ViewController alloc] init];
-    LaunchImageTransition *launchVC = [[LaunchImageTransition alloc] initWithViewController:rootVC animation:UIModalTransitionStyleFlipHorizontal delay:1.0];
-    launchVC.view.frame = self.window.bounds;
-    self.window.rootViewController = launchVC;
+    rootVC.view.frame = self.window.bounds;
+    
+    self.window.rootViewController = rootVC;
     [self.window makeKeyAndVisible];
     return YES;
 }

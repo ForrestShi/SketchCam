@@ -50,7 +50,8 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
     
     UIImageView *thumbCapturedImageView;
     UIView *whiteFlashView ;
-    UIView *bottomControlPanel;
+    //UIView *bottomControlPanel;
+    UIToolbar *bottomControlPanel;
     UIPopoverController *popoverCtr;
     BOOL            captureStillImageMode;
     BOOL            isRecording;
@@ -88,7 +89,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 - (void) hideFullScreenUI:(BOOL)hidden{
 
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.3 animations:^{
         if (hidden) {
             filterSettingsSlider.alpha = 0.0;
             timingLabel.alpha = 0;
@@ -183,14 +184,18 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
     if (!bottomControlPanel) {
 
-        bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
+       // bottomControlPanel = [[UIView alloc] initWithFrame:bottomControlPanelFrame];
+  
+        bottomControlPanel = [[UIToolbar alloc] initWithFrame:bottomControlPanelFrame];
+        [bottomControlPanel setBarStyle:UIBarStyleBlack];
+        bottomControlPanel.translucent = YES;
         
-        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
-        bottomControlPanel.layer.cornerRadius = 10.0;
-        bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
-        bottomControlPanel.layer.shadowOpacity = 0.5;
-        bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
- 
+//        bottomControlPanel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:kBottomPanelTextureImage]];
+//        bottomControlPanel.layer.cornerRadius = 10.0;
+//        bottomControlPanel.layer.shadowOffset = CGSizeMake(-10, -8);
+//        bottomControlPanel.layer.shadowOpacity = 0.5;
+//        bottomControlPanel.layer.shadowColor = [UIColor blackColor].CGColor;
+// 
     }
     
     // thumb 
@@ -255,7 +260,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 
 - (void) viewEnterFullScreen:(UIView*)view{
         
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.5 animations:^{
         _originalFrame = view.frame;
         cameraView.frame = self.view.bounds;
         
@@ -276,7 +281,7 @@ static NSString *kBottomPanelTextureImage = @"fether.jpeg";
 - (void) viewLeaveFullScreen:(UIView*)view{
     
     UIView *touchedView = view;
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:.5 animations:^{
         DLog(@"_originalFrame %@", NSStringFromCGRect(_originalFrame));
         touchedView.frame = _originalFrame;
         
