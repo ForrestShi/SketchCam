@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		18005EBD158E4CAD005E8504 /* FSGPUImageFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */; };
+		18157B1815B1A3E000985298 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = 18157B1715B1A3E000985298 /* Appirater.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18157B1A15B1A55100985298 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18157B1915B1A55100985298 /* CFNetwork.framework */; };
+		18157B1C15B1A59100985298 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18157B1B15B1A59100985298 /* SystemConfiguration.framework */; };
+		18157B1E15B1A9F600985298 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 18157B1D15B1A9F600985298 /* Default.png */; };
 		1888B259158D9D6D00950C40 /* sketchblur2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B252158D9D6D00950C40 /* sketchblur2.jpg */; };
 		1888B25A158D9D6D00950C40 /* sketchnoisegray.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B253158D9D6D00950C40 /* sketchnoisegray.jpg */; };
 		1888B25B158D9D6D00950C40 /* sketchhms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1888B254158D9D6D00950C40 /* sketchhms.jpg */; };
@@ -106,6 +110,11 @@
 /* Begin PBXFileReference section */
 		18005EBB158E4A74005E8504 /* FSGPUImageFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSGPUImageFilterManager.h; sourceTree = "<group>"; };
 		18005EBC158E4A74005E8504 /* FSGPUImageFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FSGPUImageFilterManager.m; sourceTree = "<group>"; };
+		18157B1615B1A3E000985298 /* Appirater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Appirater.h; sourceTree = "<group>"; };
+		18157B1715B1A3E000985298 /* Appirater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appirater.m; sourceTree = "<group>"; };
+		18157B1915B1A55100985298 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		18157B1B15B1A59100985298 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		18157B1D15B1A9F600985298 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		1888B252158D9D6D00950C40 /* sketchblur2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchblur2.jpg; sourceTree = "<group>"; };
 		1888B253158D9D6D00950C40 /* sketchnoisegray.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchnoisegray.jpg; sourceTree = "<group>"; };
 		1888B254158D9D6D00950C40 /* sketchhms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sketchhms.jpg; sourceTree = "<group>"; };
@@ -197,6 +206,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18157B1C15B1A59100985298 /* SystemConfiguration.framework in Frameworks */,
+				18157B1A15B1A55100985298 /* CFNetwork.framework in Frameworks */,
 				189EBFAD158CB95B00DF177C /* Security.framework in Frameworks */,
 				189EBFAB158CB95300DF177C /* StoreKit.framework in Frameworks */,
 				189EBF6E158C580300DF177C /* AssetsLibrary.framework in Frameworks */,
@@ -235,6 +246,9 @@
 		189EBF24158C508900DF177C = {
 			isa = PBXGroup;
 			children = (
+				18157B1D15B1A9F600985298 /* Default.png */,
+				18157B1B15B1A59100985298 /* SystemConfiguration.framework */,
+				18157B1915B1A55100985298 /* CFNetwork.framework */,
 				18919C0A15947A6A0067B1CE /* Icon-72@2x.png */,
 				18919BFC15946BF70067B1CE /* Icon-72.png */,
 				18919BFD15946BF70067B1CE /* Icon-Small-50.png */,
@@ -243,6 +257,8 @@
 				18919C0015946BF70067B1CE /* Icon.png */,
 				18919C0115946BF70067B1CE /* Icon@2x.png */,
 				189EBFCA158CE0C600DF177C /* sketchcam.entitlements */,
+				18157B1615B1A3E000985298 /* Appirater.h */,
+				18157B1715B1A3E000985298 /* Appirater.m */,
 				189EBFA9158CB8DC00DF177C /* MKStoreKit */,
 				189EBF39158C508A00DF177C /* SketchCam */,
 				189EBF32158C508A00DF177C /* Frameworks */,
@@ -500,6 +516,7 @@
 				18919C0615946BF70067B1CE /* Icon.png in Resources */,
 				18919C0715946BF70067B1CE /* Icon@2x.png in Resources */,
 				18919C0B15947A6A0067B1CE /* Icon-72@2x.png in Resources */,
+				18157B1E15B1A9F600985298 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +539,7 @@
 				189EBFBB158CBB0100DF177C /* JSONKit.m in Sources */,
 				189EBFBC158CBB0100DF177C /* NSData+Base64.m in Sources */,
 				189EBFBD158CBB0100DF177C /* SFHFKeychainUtils.m in Sources */,
+				18157B1815B1A3E000985298 /* Appirater.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
